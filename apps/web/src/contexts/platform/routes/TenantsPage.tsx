@@ -256,7 +256,7 @@ function NewTenantForm({ onProvisioned }: { readonly onProvisioned: () => void }
             onChange={(event) => {
               setTaxId(event.target.value);
             }}
-            placeholder="900.123.456-8"
+            placeholder="12-3456789"
             required
             value={taxId}
           />
