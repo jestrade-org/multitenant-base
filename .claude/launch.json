@@ -8,6 +8,15 @@
       "port": 3100
     },
     {
+      "name": "api-local-instance",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "eval \"$(pnpm -s supabase status -o env)\" && CONTROL_DATABASE_URL=\"$DB_URL\" SUPABASE_AUTH_URL=\"$API_URL/auth/v1\" SUPABASE_ANON_KEY=\"$ANON_KEY\" PORT=3100 CORS_ALLOWED_ORIGINS=http://localhost:5273 ROOT_DOMAIN=example.test pnpm build && CONTROL_DATABASE_URL=\"$DB_URL\" SUPABASE_AUTH_URL=\"$API_URL/auth/v1\" SUPABASE_ANON_KEY=\"$ANON_KEY\" PORT=3100 CORS_ALLOWED_ORIGINS=http://localhost:5273 ROOT_DOMAIN=example.test pnpm dev:api"
+      ],
+      "port": 3100
+    },
+    {
       "name": "web",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["dev:web"],
