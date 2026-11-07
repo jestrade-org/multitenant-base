@@ -1,4 +1,5 @@
 import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
+import { StrictMode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SessionProvider, useSession } from './SessionProvider.js';
@@ -125,5 +126,46 @@ describe('SessionProvider', () => {
     });
 
     expect(screen.getByText('anonymous')).toBeDefined();
+  });
+});
+
+describe('loading the session', () => {
+  it('never reports an aborted request as signed out, so a reload keeps its deep link', async () => {
+    // StrictMode mounts, aborts and re-runs the effect. Reading the abort as "anonymous"
+    // sent every reloaded deep link to the sign-in screen and then home.
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        (_path: string, init?: RequestInit) =>
+          new Promise<Response>((resolve, reject) => {
+            init?.signal?.addEventListener('abort', () => {
+              reject(new DOMException('aborted', 'AbortError'));
+            });
+            // Slower than React's remount, as a real network is, so the first request is
+            // always aborted while still in flight.
+            setTimeout(() => {
+              resolve(new Response(JSON.stringify(SESSION), { status: 200 }));
+            }, 50);
+          }),
+      ),
+    );
+    const seen: string[] = [];
+
+    render(
+      <StrictMode>
+        <SessionProvider>
+          <Probe
+            onReady={(session) => {
+              seen.push(session.state.status);
+            }}
+          />
+        </SessionProvider>
+      </StrictMode>,
+    );
+    await waitFor(() => {
+      expect(screen.getByText('authenticated')).toBeDefined();
+    });
+
+    expect(seen).not.toContain('anonymous');
   });
 });

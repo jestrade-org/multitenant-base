@@ -139,7 +139,10 @@ export function SessionProvider({ children }: { readonly children: ReactNode }) 
           setState({ status: 'anonymous' });
         }
       } catch {
-        // An abort lands here too; setting state on an unmounted tree is a no-op in React 18.
+        // An aborted request says nothing about the session. React's StrictMode aborts the
+        // first run of this effect on a component that stays mounted, and reading that as
+        // "anonymous" sent every reloaded deep link to the sign-in screen and then home.
+        if (controller.signal.aborted) return;
         setState({ status: 'anonymous' });
       }
     })();
