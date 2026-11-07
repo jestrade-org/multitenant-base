@@ -1,0 +1,50 @@
+{
+  "name": "multitenant-base",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.30.3",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "dev": "pnpm build && pnpm -r --parallel dev",
+    "dev:api": "pnpm --filter @multitenant-base/api dev",
+    "dev:web": "pnpm --filter @multitenant-base/web dev",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . --max-warnings 0",
+    "lint:arch": "eslint . --config eslint.architecture.config.js --max-warnings 0",
+    "migrate:tenants": "pnpm --filter @multitenant-base/api migrate:tenants",
+    "seed:auth": "pnpm --filter @multitenant-base/api seed:auth",
+    "start": "pnpm --filter @multitenant-base/api start",
+    "test": "vitest run --project node --project web",
+    "test:watch": "vitest",
+    "typecheck": "tsc --build --force",
+    "verify:rls": "pnpm --filter @multitenant-base/api verify:rls",
+    "test:integration": "vitest run --project integration --no-file-parallelism",
+    "test:coverage": "vitest run --project node --project web --coverage.enabled"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@types/node": "^20.17.12",
+    "@vitest/coverage-v8": "^2.1.9",
+    "eslint": "^9.18.0",
+    "eslint-import-resolver-typescript": "^3.7.0",
+    "eslint-plugin-import": "^2.31.0",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
+    "supabase": "^3.0.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0",
+    "vitest": "^2.1.8"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "unrs-resolver"
+    ]
+  }
+}

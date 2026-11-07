@@ -1,0 +1,124 @@
+.members {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.members__intro {
+  color: var(--colour-text-muted);
+  margin: 0;
+  max-width: 60ch;
+}
+
+.members__form {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.members__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.members__field label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.members__hint {
+  color: var(--colour-text-muted);
+  font-size: var(--text-xs);
+  margin: 0;
+}
+
+.members__form .button {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+.members__error,
+.members__success {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: var(--space-3);
+}
+
+.members__error {
+  background: var(--colour-risk-critical-surface);
+  border-left: 3px solid var(--colour-risk-critical);
+  color: var(--colour-risk-critical);
+}
+
+.members__success {
+  background: var(--colour-surface-muted);
+  border-left: 3px solid var(--colour-accent);
+}
+
+.members__scroll {
+  overflow-x: auto;
+}
+
+.members__table {
+  border-collapse: collapse;
+  min-width: 100%;
+}
+
+.members__caption {
+  caption-side: top;
+  color: var(--colour-text-muted);
+  font-size: var(--text-sm);
+  padding-bottom: var(--space-2);
+  text-align: left;
+}
+
+.members__table th,
+.members__table td {
+  border-bottom: 1px solid var(--colour-border);
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.members__table thead th {
+  border-bottom: 2px solid var(--colour-border-strong);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.members__row--inactive {
+  opacity: 0.6;
+}
+
+.members__name {
+  display: block;
+  font-weight: 600;
+}
+
+.members__email {
+  color: var(--colour-text-muted);
+  font-size: var(--text-xs);
+}
+
+.members__status {
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  padding: 0.1rem var(--space-2);
+  white-space: nowrap;
+}
+
+.members__status--active {
+  background: var(--colour-surface-muted);
+}
+
+.members__status--inactive {
+  background: var(--colour-risk-attention-surface);
+  color: var(--colour-risk-attention);
+}
+
+.members__actions {
+  text-align: right;
+  white-space: nowrap;
+}

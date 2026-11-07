@@ -1,0 +1,267 @@
+.card {
+  background: var(--colour-surface-raised);
+  border: 1px solid var(--colour-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-4);
+}
+
+.card__header {
+  align-items: baseline;
+  display: flex;
+  gap: var(--space-3);
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.card__title {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin: 0;
+  text-transform: uppercase;
+  color: var(--colour-text-muted);
+}
+
+.stat {
+  margin: 0;
+}
+
+.stat__label {
+  color: var(--colour-text-muted);
+  font-size: var(--text-sm);
+}
+
+.stat__value {
+  font-family: var(--font-numeric);
+  font-size: var(--text-xl);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  margin: var(--space-1) 0 0;
+}
+
+.stat__value--normal {
+  color: var(--colour-risk-normal);
+}
+.stat__value--attention {
+  color: var(--colour-risk-attention);
+}
+.stat__value--critical {
+  color: var(--colour-risk-critical);
+}
+
+.stat__hint {
+  color: var(--colour-text-muted);
+  font-size: var(--text-xs);
+  margin: var(--space-1) 0 0;
+}
+
+.badge {
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  white-space: nowrap;
+}
+
+.badge--normal {
+  background: var(--colour-risk-normal-surface);
+  color: var(--colour-risk-normal);
+}
+.badge--attention {
+  background: var(--colour-risk-attention-surface);
+  color: var(--colour-risk-attention);
+}
+.badge--critical {
+  background: var(--colour-risk-critical-surface);
+  color: var(--colour-risk-critical);
+}
+
+.skeleton {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.skeleton__row {
+  background: linear-gradient(
+    90deg,
+    var(--colour-surface-sunken) 25%,
+    var(--colour-border) 37%,
+    var(--colour-surface-sunken) 63%
+  );
+  background-size: 400% 100%;
+  border-radius: var(--radius-sm);
+  height: 1.5rem;
+  animation: skeleton-shimmer 1.4s ease infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+.empty {
+  color: var(--colour-text-muted);
+  padding: var(--space-4) 0;
+}
+
+.empty__message {
+  margin: 0 0 var(--space-3);
+}
+
+.error {
+  background: var(--colour-risk-critical-surface);
+  border-left: 3px solid var(--colour-risk-critical);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+}
+
+.error__message {
+  margin: 0;
+}
+
+.error__reference {
+  color: var(--colour-text-muted);
+  font-size: var(--text-xs);
+  margin: var(--space-2) 0;
+}
+
+.button {
+  background: var(--colour-text);
+  border: 1px solid var(--colour-text);
+  border-radius: var(--radius-sm);
+  color: var(--colour-text-inverse);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--text-sm);
+  /* 44px minimum touch target: this is read on a phone. */
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+}
+
+.button:hover {
+  background: var(--colour-button-hover);
+}
+
+/* — headline figures — */
+
+/*
+ * Hairline separators without a single border declaration, and they never double up where
+ * two cells meet: each cell carries a 1px ring and the 1px gap is exactly wide enough for
+ * two neighbouring rings to meet in it.
+ *
+ * The ring is on the cell rather than the grid because a grid painted underneath shows
+ * through wherever the last row is short — five figures in a four-column grid would leave
+ * three cells' worth of bare hairline colour.
+ */
+.kpi-grid {
+  display: grid;
+  gap: 1px;
+  /* Wide enough for a full COP amount at the value's largest size. Compacting the figure
+     to `$ 184 M` would fit, and would also be the product telling a manager their cash
+     position to two significant figures. */
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.kpi {
+  background: var(--colour-surface-raised);
+  box-shadow: 0 0 0 1px var(--colour-border);
+  padding: var(--space-3) var(--space-4);
+}
+
+.kpi__label {
+  color: var(--colour-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.kpi__value {
+  /* Scales with the viewport so a long figure is never clipped on a phone.
+     A figure that runs out of its box is worse than a smaller one. */
+  font-size: clamp(1.125rem, 2.6vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-top: var(--space-1);
+  /* Proportional figures: `tabular-nums` is for columns that must align, and it makes a
+     short number look loose at this size. */
+  font-variant-numeric: normal;
+  white-space: nowrap;
+}
+
+.kpi__value--normal {
+  color: var(--colour-risk-normal);
+}
+.kpi__value--attention {
+  color: var(--colour-risk-attention);
+}
+.kpi__value--critical {
+  color: var(--colour-risk-critical);
+}
+
+.kpi__caption {
+  color: var(--colour-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* — the call-out — */
+
+.banner {
+  border-left: 4px solid;
+  padding: var(--space-4) var(--space-5);
+}
+
+.banner--normal {
+  background: var(--colour-risk-normal-surface);
+  border-left-color: var(--colour-risk-normal);
+}
+.banner--attention {
+  background: var(--colour-risk-attention-surface);
+  border-left-color: var(--colour-risk-attention-mark);
+}
+.banner--critical {
+  background: var(--colour-risk-critical-surface);
+  border-left-color: var(--colour-risk-critical);
+}
+
+.banner__eyebrow {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.banner--normal .banner__eyebrow {
+  color: var(--colour-risk-normal);
+}
+.banner--attention .banner__eyebrow {
+  color: var(--colour-risk-attention);
+}
+.banner--critical .banner__eyebrow {
+  color: var(--colour-risk-critical);
+}
+
+.banner__body {
+  margin-top: var(--space-3);
+  max-width: 80ch;
+}
+
+.banner__body > p {
+  margin: 0 0 var(--space-2);
+}
+
+.banner__body > p:last-child {
+  margin-bottom: 0;
+}
+
+.banner__action {
+  margin-top: var(--space-3);
+}

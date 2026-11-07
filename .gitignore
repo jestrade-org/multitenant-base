@@ -1,0 +1,75 @@
+# ---------------------------------------------------------------- secrets
+# Nothing below this heading may ever reach the remote.
+.env
+.env.*
+!.env.example
+!.env.*.example
+**/.env
+**/.env.*
+!**/.env.example
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+service-account*.json
+*service*account*key*.json
+google_service_account_key.json
+*-firebase-adminsdk-*.json
+
+# ------------------------------------------------------------ dependencies
+node_modules/
+.pnpm-store/
+
+# ----------------------------------------------------------- build output
+dist/
+build/
+out/
+*.tsbuildinfo
+.turbo/
+.vite/
+
+# --------------------------------------------------------- Supabase local
+# supabase/config.toml, migrations/ and seed.sql ARE committed.
+supabase/.branches/
+supabase/.temp/
+
+# ---------------------------------------------------------------- testing
+coverage/
+playwright-report/
+test-results/
+blob-report/
+.nyc_output/
+
+# ------------------------------------------------------------------- logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-error.log*
+
+# ---------------------------------------------------------------- tooling
+.eslintcache
+.stylelintcache
+*.tgz
+
+# ---------------------------------------------------------- local configs
+# Project rules in .claude/ are committed; only per-developer settings are not.
+.claude/settings.local.json
+
+# ---------------------------------------------------------------- editors
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# --------------------------------------------------------------------- OS
+.DS_Store
+Thumbs.db
+
+coverage/
+
+demo-files/
+.storage/

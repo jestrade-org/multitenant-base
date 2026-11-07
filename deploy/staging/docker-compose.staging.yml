@@ -1,0 +1,189 @@
+# Staging only. ADR 0002 — docs/adr/0002-staging-deployment.md
+#
+# This file describes a demo environment holding synthetic data exclusively. It is not a
+# production topology and must not be copied into one: there are no backups, and the
+# relaxations it makes are legitimate only while no real client figures live here.
+#
+#   docker compose -f deploy/staging/docker-compose.staging.yml --env-file /etc/multitenant-base/staging.env up -d --wait
+#
+# Secrets come from /etc/multitenant-base/staging.env on the host (mode 600, owned by the deploy
+# user). They are never in this file, in the image, or in git.
+
+name: mtb-staging
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: '10m'
+    max-file: '3'
+
+services:
+  # ------------------------------------------------------------------ database
+  db:
+    image: supabase/postgres:17.4.1.075 # major 17, matching supabase/config.toml
+    restart: unless-stopped
+    logging: *logging
+    # Bound to loopback only. This is not the port publishing docker.md forbids — that
+    # rule is about 0.0.0.0, which bypasses ufw and puts the service on the internet.
+    # 127.0.0.1 is unreachable from outside and is what makes the SSH tunnel for pushing
+    # migrations possible at all.
+    ports:
+      - '127.0.0.1:5432:5432'
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?required}
+      POSTGRES_DB: postgres
+    command:
+      - postgres
+      # The image defaults to listening on localhost only, which is right for a host
+      # port publish but leaves `auth` and `api` unable to reach `db` by service name —
+      # pg_hba's catch-all `scram-sha-256` rule already covers the compose subnet, so
+      # this is the only change needed for sibling containers to connect.
+      - -c
+      - listen_addresses=*
+      - -c
+      - shared_buffers=512MB
+      # work_mem is per sort, per connection: the one that multiplies into an OOM.
+      - -c
+      - work_mem=8MB
+      - -c
+      - max_connections=100
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./db-init/align-role-passwords.sh:/docker-entrypoint-initdb.d/99-align-role-passwords.sh:ro
+    mem_limit: 2g
+    mem_reservation: 1g
+    memswap_limit: 2g
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks: [mtb]
+
+  # ---------------------------------------------------------------------- auth
+  # The only Supabase service this application uses. No Storage, no Realtime, no
+  # PostgREST, no Studio — nothing in the codebase calls them, and a service that is
+  # installed but never called is attack surface with no upside.
+  auth:
+    image: supabase/auth:v2.177.0 # `supabase/gotrue` is the former name of this image
+    restart: unless-stopped
+    logging: *logging
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      PORT: 9999
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:${POSTGRES_PASSWORD:?required}@db:5432/postgres
+      # Required by GoTrue's config loader (unprefixed, unlike its other settings) — it
+      # boots with a fatal "API_EXTERNAL_URL missing value" without it. Cosmetic here
+      # (used to build links in emails we never send, since signup is disabled and
+      # AUTOCONFIRM skips confirmation mail) — deliberately the public host, unlike
+      # GOTRUE_JWT_ISSUER below, in case that ever changes.
+      API_EXTERNAL_URL: https://${TENANT_HOST:?required}/auth/v1
+      GOTRUE_SITE_URL: https://${TENANT_HOST:?required}
+      GOTRUE_URI_ALLOW_LIST: https://${TENANT_HOST:?required}
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: 'true'
+      GOTRUE_MAILER_AUTOCONFIRM: 'true'
+      # §8.2: fifteen minutes, not Supabase's default hour. The refresh token covers the
+      # gap and rotates with reuse detection.
+      GOTRUE_JWT_EXP: '900'
+      GOTRUE_JWT_AUD: authenticated
+      # Internal, not the public host: `apps/api`'s SupabaseAuth client is the only
+      # thing that ever calls GoTrue directly (SUPABASE_AUTH_URL in the secrets file
+      # must match this exactly — it doubles as the expected `iss` claim and the base
+      # URL for token/JWKS/admin calls). The browser never receives a token or talks to
+      # GoTrue itself, so this never needs to cross nginx's public, basic-auth-gated
+      # listener — routing it there would 401 every login, since those calls carry no
+      # basic-auth credentials.
+      GOTRUE_JWT_ISSUER: http://auth:9999
+      # SupabaseAuth verifies asymmetrically against /.well-known/jwks.json — it never
+      # holds a signing secret. GoTrue signs symmetrically by default, and with that
+      # default every login succeeds and every subsequent verification fails. Verify the
+      # endpoint after first boot; see the README.
+      GOTRUE_JWT_KEYS: ${GOTRUE_JWT_KEYS:?required}
+      # Legacy required key: GoTrue's config loader still fails to boot without it even
+      # when GOTRUE_JWT_KEYS supplies the real (asymmetric) signing keys. Kept as a real
+      # secret, not a placeholder, since some internal GoTrue paths still read it.
+      GOTRUE_JWT_SECRET: ${GOTRUE_JWT_SECRET:?required}
+      GOTRUE_DISABLE_SIGNUP: 'true'
+      GOTRUE_PASSWORD_MIN_LENGTH: '12'
+      GOTRUE_SECURITY_REFRESH_TOKEN_ROTATION_ENABLED: 'true'
+      GOTRUE_SECURITY_REFRESH_TOKEN_REUSE_INTERVAL: '10'
+    mem_limit: 256m
+    memswap_limit: 256m
+    networks: [mtb]
+
+  # ----------------------------------------------------------------------- api
+  api:
+    # Built elsewhere and tagged with the git SHA. Never `latest`: when something breaks
+    # you need to know which commit is running.
+    image: multitenant-base-api:${API_IMAGE_TAG:?required}
+    restart: unless-stopped
+    logging: *logging
+    init: true
+    depends_on:
+      db:
+        condition: service_healthy
+    # No `ports`. Docker publishes past ufw, so a published port here would be on the
+    # internet regardless of the firewall. nginx reaches it over this network.
+    env_file:
+      - /etc/multitenant-base/staging.env
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: '3000'
+      # ~75% of mem_limit, so the GC works before the kernel does. An OOM kill is SIGKILL:
+      # the SIGTERM drain this app implements never runs, and an in-flight write is cut.
+      NODE_OPTIONS: --max-old-space-size=1536
+      # Shipped inside the image, relative to the package root (/app). The repository
+      # default points at the workspace checkout, which does not exist in a container.
+      TENANT_MIGRATIONS_DIRECTORY: ./supabase/tenant-migrations
+      # On a volume. The default (./.storage) lives in the container's writable layer,
+      # so every stored file would vanish on restart.
+      STORAGE_ROOT_DIRECTORY: /data/storage
+    volumes:
+      - api-storage:/data/storage
+    mem_limit: 2g
+    mem_reservation: 1g
+    memswap_limit: 2g
+    networks: [mtb]
+
+  # ----------------------------------------------------------------------- web
+  web:
+    build:
+      context: ../..
+      dockerfile: apps/web/Dockerfile
+    restart: unless-stopped
+    logging: *logging
+    mem_limit: 64m
+    memswap_limit: 64m
+    networks: [mtb]
+
+  # --------------------------------------------------------------------- nginx
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    logging: *logging
+    depends_on: [api, auth, web]
+    # The only service on the public interface.
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./nginx/staging.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/certbot:/var/www/certbot:ro
+    mem_limit: 128m
+    memswap_limit: 128m
+    networks: [mtb]
+
+networks:
+  mtb:
+    driver: bridge
+
+volumes:
+  db-data:
+  api-storage:

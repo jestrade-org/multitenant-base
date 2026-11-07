@@ -1,0 +1,12 @@
+{
+  "title": "Inicio",
+  "welcome": "Hola, {{name}}.",
+  "company": "Empresa activa: {{company}}",
+  "intro": "Este es el espacio de trabajo de su empresa. Los módulos de cada proyecto aparecen en el menú a medida que se habilitan para su rol.",
+  "shortcuts": {
+    "title": "Accesos rápidos",
+    "members": "Administrar usuarios",
+    "roles": "Roles y permisos",
+    "profile": "Mi perfil"
+  }
+}

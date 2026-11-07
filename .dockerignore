@@ -1,0 +1,58 @@
+# Build context is the repository root. Keep it small and secret-free.
+
+# Dependencies and build output — installed/compiled inside the image
+node_modules
+**/node_modules
+dist
+**/dist
+build
+**/build
+.turbo
+**/.turbo
+*.tsbuildinfo
+# Recursive form matters: Docker ignore patterns are not recursive, so the line above
+# only ever matched the context root. The per-package buildinfo files were reaching the
+# image and, having been written on a case-insensitive filesystem, made tsc's incremental
+# build disagree with itself about which files exist.
+**/*.tsbuildinfo
+
+# Secrets — must never enter the build context
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+secrets
+*.pem
+*.key
+*.p12
+
+# VCS, CI and tooling
+.git
+.github
+.gitignore
+.husky
+.vscode
+.idea
+
+# Local Supabase stack and generated artifacts
+supabase/.branches
+supabase/.temp
+
+# Tests, coverage and reports — not shipped in the runtime image
+coverage
+playwright-report
+test-results
+**/*.test.ts
+**/*.spec.ts
+e2e
+
+# Frontend: built and deployed separately, never part of the API image
+apps/web/dist
+
+# Docs and local noise
+docs
+*.md
+!README.md
+.DS_Store
+*.log

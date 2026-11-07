@@ -1,0 +1,42 @@
+{
+  "app": {
+    "name": "Multiempresa",
+    "tagline": "Empresas, usuarios y permisos en un solo lugar"
+  },
+  "nav": {
+    "label": "Navegación principal",
+    "skipToContent": "Saltar al contenido",
+    "roles": "Roles",
+    "noAccessibleScreens": "Su usuario no tiene acceso a ninguna pantalla todavía. Pida a un administrador que le asigne un rol.",
+    "tenants": "Empresas",
+    "platformScope": "Plataforma",
+    "members": "Usuarios",
+    "plans": "Planes",
+    "queues": "Colas",
+    "audit": "Auditoría",
+    "scope": {
+      "company": "Espacio de trabajo",
+      "platform": "Plataforma"
+    },
+    "group": {
+      "company": "Empresa",
+      "administration": "Administración",
+      "platform": "Plataforma"
+    },
+    "home": "Inicio"
+  },
+  "state": {
+    "loadingLabel": "Cargando información",
+    "retry": "Reintentar",
+    "errorGeneric": "No pudimos cargar esta información. Vuelva a intentarlo en un momento.",
+    "referenceLabel": "Código de referencia para soporte",
+    "empty": "No hay nada que mostrar todavía."
+  },
+  "support": {
+    "acting": "Sesión de soporte.",
+    "actingDetail": "{{staff}} está actuando como {{user}} en {{tenant}}. Todo lo que haga queda registrado a su nombre en la auditoría de la empresa.",
+    "return": "Volver a mi perfil",
+    "returning": "Volviendo…",
+    "returnFailed": "No pudimos cerrar la sesión de soporte. Sigue activa: vuelva a intentarlo antes de hacer cualquier cambio."
+  }
+}

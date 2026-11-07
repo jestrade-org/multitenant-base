@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "files": [],
+  "references": [
+    {
+      "path": "packages/shared-kernel"
+    },
+    {
+      "path": "packages/tenancy"
+    },
+    {
+      "path": "packages/iam"
+    },
+    {
+      "path": "packages/integrations"
+    },
+    {
+      "path": "packages/audit"
+    },
+    {
+      "path": "apps/api"
+    },
+    {
+      "path": "apps/web"
+    }
+  ]
+}

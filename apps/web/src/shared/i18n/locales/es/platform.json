@@ -1,0 +1,279 @@
+{
+  "tenants": {
+    "title": "Empresas",
+    "intro": "Alta y estado de las empresas de la plataforma. Registrar una empresa aprovisiona su esquema, aplica las migraciones e invita a su primer administrador.",
+    "listTitle": "Empresas registradas",
+    "caption": "Empresas registradas, con su identificación tributaria, plan y estado.",
+    "empty": "Todavía no hay empresas registradas.",
+    "error": "No pudimos cargar las empresas. Vuelva a intentarlo.",
+    "retry": "Reintentar",
+    "suspend": "Suspender",
+    "resume": "Reactivar",
+    "columns": {
+      "name": "Empresa",
+      "taxId": "Identificación tributaria",
+      "plan": "Plan",
+      "status": "Estado",
+      "since": "Desde",
+      "actions": "Acciones"
+    },
+    "statuses": {
+      "onboarding": "En alta",
+      "active": "Activa",
+      "suspended": "Suspendida",
+      "terminated": "Terminada",
+      "unfinished": "Aprovisionamiento incompleto"
+    },
+    "plans": {
+      "starter": "Starter",
+      "business": "Business",
+      "enterprise": "Enterprise"
+    },
+    "new": {
+      "title": "Registrar una empresa",
+      "name": "Razón social",
+      "taxId": "Identificación tributaria",
+      "taxIdHint": "El número de registro tributario o legal de la empresa. Puede incluir puntos, guiones o barras.",
+      "subdomain": "Subdominio (opcional)",
+      "subdomainHint": "Si lo deja en blanco lo derivamos de la razón social.",
+      "plan": "Plan",
+      "administratorName": "Nombre del primer administrador",
+      "administratorEmail": "Correo del primer administrador",
+      "administratorEmailHint": "Le enviaremos una invitación para que defina su propia contraseña.",
+      "submit": "Registrar y aprovisionar",
+      "working": "Aprovisionando…",
+      "reference": "referencia",
+      "created": "{{name}} quedó aprovisionada. Invitamos a {{email}} a definir su contraseña.",
+      "resumed": "Completamos el aprovisionamiento de {{name}}, que había quedado a medias.",
+      "errors": {
+        "default": "No pudimos completar el registro. Revise los datos e inténtelo de nuevo; si persiste, cite la referencia al escribirnos.",
+        "VALIDATION_FAILED": "Revise el campo {{field}}: el valor no es válido.",
+        "TENANT_ALREADY_REGISTERED": "Ya existe una empresa registrada con esa identificación tributaria o subdominio.",
+        "NOT_AUTHORIZED": "Su cuenta no tiene permiso para registrar empresas.",
+        "TOO_MANY_ATTEMPTS": "Demasiados registros seguidos. Espere un minuto y vuelva a intentarlo."
+      },
+      "fields": {
+        "name": "razón social",
+        "taxId": "identificación tributaria",
+        "subdomain": "subdominio",
+        "planCode": "plan",
+        "administratorEmail": "correo del administrador",
+        "administratorName": "nombre del administrador"
+      }
+    }
+  },
+  "plans": {
+    "title": "Planes y cuotas",
+    "intro": "Precios y límites de cada plan, y el consumo de cada empresa frente al suyo. Superar un límite nunca degrada el servicio en silencio: la empresa recibe un aviso al llegar al 90%.",
+    "error": "No pudimos cargar los planes ni el consumo. Vuelva a intentarlo.",
+    "retry": "Reintentar",
+    "usage": {
+      "title": "Consumo por empresa",
+      "caption": "Usuarios activos de cada empresa frente al límite de su plan.",
+      "empty": "Todavía no hay empresas aprovisionadas que medir.",
+      "neverMeasured": "Sin medición",
+      "ofLimit": "{{used}} de {{limit}}",
+      "freshness": "Las cifras provienen de la verificación diaria de cuotas, no de un conteo en vivo: el panel de plataforma no consulta los datos de ninguna empresa. La columna «Última medición» indica a qué momento corresponden.",
+      "status": {
+        "warning": "Cerca del límite",
+        "exceeded": "Límite superado"
+      },
+      "columns": {
+        "tenant": "Empresa",
+        "plan": "Plan",
+        "users": "Usuarios",
+        "measuredAt": "Última medición"
+      }
+    },
+    "catalogue": {
+      "title": "Catálogo de planes",
+      "caption": "Planes disponibles, con su precio mensual, sus límites y cuántas empresas los tienen.",
+      "edit": "Editar",
+      "columns": {
+        "plan": "Plan",
+        "price": "Precio mensual",
+        "users": "Usuarios",
+        "tenants": "Empresas",
+        "actions": "Acciones"
+      }
+    },
+    "form": {
+      "newTitle": "Crear un plan",
+      "editTitle": "Editar {{name}}",
+      "code": "Código",
+      "codeHint": "Minúsculas, dígitos y guiones bajos. Es el identificador al que apuntan las empresas.",
+      "codeLocked": "El código no se puede cambiar: es a lo que apunta cada empresa.",
+      "name": "Nombre comercial",
+      "monthlyPrice": "Precio mensual",
+      "monthlyPriceHint": "Con hasta cuatro decimales, por ejemplo 149.0000.",
+      "users": "Límite de usuarios",
+      "affectsTenants_one": "Este plan lo tiene {{count}} empresa. El cambio le aplica de inmediato.",
+      "affectsTenants_other": "Este plan lo tienen {{count}} empresas. El cambio les aplica de inmediato.",
+      "submit": "Guardar plan",
+      "working": "Guardando…",
+      "reference": "referencia",
+      "errors": {
+        "default": "No pudimos guardar el plan. Revise los datos e inténtelo de nuevo; si persiste, cite la referencia al escribirnos.",
+        "INVALID_PLAN": "Revise el campo {{field}}: el valor no es válido.",
+        "VALIDATION_FAILED": "Revise el campo {{field}}: el valor no es válido.",
+        "PLAN_CODE_ALREADY_EXISTS": "Ya existe un plan con ese código.",
+        "PLAN_NOT_FOUND": "Ese plan ya no existe. Actualice la página.",
+        "PLAN_CODE_MISMATCH": "El código del plan no coincide con el que está editando.",
+        "NOT_AUTHORIZED": "Su cuenta no tiene permiso para gestionar planes."
+      },
+      "fields": {
+        "code": "código",
+        "name": "nombre",
+        "monthlyPrice": "precio mensual",
+        "quotas.users": "límite de usuarios",
+        "users": "límite de usuarios"
+      },
+      "currency": "Moneda"
+    }
+  },
+  "queues": {
+    "title": "Colas y trabajos",
+    "intro": "Estado de las colas de procesamiento y de los trabajos que agotaron sus reintentos. Un trabajo que falla en silencio se ve aquí como una tarea que nunca ocurrió.",
+    "listTitle": "Colas",
+    "caption": "Profundidad, antigüedad del trabajo más viejo y fallos de cada cola.",
+    "error": "No pudimos cargar el estado de las colas. Vuelva a intentarlo.",
+    "retry": "Reintentar",
+    "stalled": "Detenida",
+    "columns": {
+      "queue": "Cola",
+      "pending": "En espera",
+      "active": "En proceso",
+      "oldest": "Más antiguo",
+      "completed": "Completados (24 h)",
+      "failed": "Fallidos (24 h)",
+      "deadLettered": "Sin salida"
+    },
+    "names": {
+      "notifications": "Notificaciones",
+      "scheduled": "Programados"
+    },
+    "age": {
+      "seconds_one": "{{count}} segundo",
+      "seconds_other": "{{count}} segundos",
+      "minutes_one": "{{count}} minuto",
+      "minutes_other": "{{count}} minutos",
+      "hours_one": "{{count}} hora",
+      "hours_other": "{{count}} horas"
+    },
+    "deadLetter": {
+      "title": "Trabajos sin salida",
+      "showing": "Mostrando:",
+      "allQueues": "todas las colas",
+      "clearFilter": "Ver todas",
+      "empty": "Ninguna cola tiene trabajos sin salida.",
+      "error": "No pudimos cargar los trabajos sin salida. Vuelva a intentarlo.",
+      "failedAt": "Falló el",
+      "attempts": "Intentos",
+      "failureClass": "Tipo de fallo",
+      "correlationId": "Correlación",
+      "replay": "Reintentar",
+      "replaying": "Reintentando…",
+      "discard": "Descartar",
+      "discarding": "Descartando…",
+      "confirmDiscard": "Confirmar descarte",
+      "cancel": "Cancelar",
+      "reasonLabel": "Motivo del descarte",
+      "reasonHint": "Mínimo diez caracteres. Queda en el registro de auditoría junto con su nombre: descartar un trabajo decide que nunca se ejecutará.",
+      "privacyNote": "Mostramos el tipo de fallo y el identificador de correlación, nunca el contenido del trabajo ni el mensaje de error: ambos pueden contener datos de la empresa. Con el identificador de correlación puede ubicar el detalle completo en los registros del sistema.",
+      "errors": {
+        "default": "No pudimos completar la acción sobre el trabajo. Vuelva a intentarlo.",
+        "JOB_NOT_FOUND": "Ese trabajo ya no está en la cola: probablemente un colega lo atendió hace un momento.",
+        "NOT_AUTHORIZED": "Su cuenta puede consultar las colas, pero no reintentar ni descartar trabajos.",
+        "DISCARD_NEEDS_REASON": "Escriba un motivo de al menos diez caracteres.",
+        "VALIDATION_FAILED": "Escriba un motivo de al menos diez caracteres."
+      }
+    },
+    "descriptions": {
+      "notifications": "Envío de alertas y mensajes originados en eventos, como los avisos de cuota.",
+      "scheduled": "Trabajos recurrentes por empresa, como la verificación de cuotas."
+    }
+  },
+  "audit": {
+    "title": "Auditoría",
+    "intro": "Consulta del registro de auditoría de todas las empresas: quién hizo qué, cuándo y con qué resultado.",
+    "recordedNotice": "Esta consulta queda registrada. Cada búsqueda se guarda en el registro de auditoría con su usuario, los filtros aplicados y cuántos resultados devolvió.",
+    "filters": {
+      "title": "Filtros",
+      "tenantId": "Empresa (identificador)",
+      "tenantIdHint": "Déjelo en blanco para consultar todas las empresas.",
+      "actorId": "Actor (identificador)",
+      "action": "Acción",
+      "result": "Resultado",
+      "anyResult": "Cualquiera",
+      "from": "Desde",
+      "to": "Hasta",
+      "windowHint": "Sin fechas consultamos los últimos 30 días. El rango máximo es de un año.",
+      "search": "Buscar",
+      "reset": "Limpiar"
+    },
+    "columns": {
+      "occurredAt": "Fecha y hora",
+      "tenant": "Empresa",
+      "actor": "Actor",
+      "action": "Acción",
+      "resource": "Recurso",
+      "result": "Resultado"
+    },
+    "actorTypes": {
+      "user": "Usuario",
+      "api_key": "Llave de API",
+      "platform_admin": "Plataforma",
+      "mcp_client": "Cliente MCP"
+    },
+    "results": {
+      "title": "Resultados",
+      "caption": "Eventos de auditoría que coinciden con los filtros, del más reciente al más antiguo.",
+      "empty": "Ningún evento coincide con esos filtros en el período consultado.",
+      "error": "No pudimos consultar el registro de auditoría. Vuelva a intentarlo.",
+      "retry": "Reintentar",
+      "platformScope": "Plataforma",
+      "nextPage": "Siguiente página",
+      "firstPage": "Volver al inicio",
+      "lastPage": "No hay más resultados.",
+      "outcome": {
+        "success": "Exitoso",
+        "denied": "Denegado",
+        "error": "Error"
+      }
+    },
+    "errors": {
+      "AUDIT_WINDOW_TOO_WIDE": "El rango consultado es de {{requestedDays}} días y el máximo es {{maximumDays}}. Acorte el período.",
+      "INVALID_AUDIT_FILTER": "Revise el filtro {{field}}: el valor no es válido.",
+      "NOT_AUTHORIZED": "Su cuenta no tiene permiso para consultar la auditoría de todas las empresas.",
+      "TOO_MANY_ATTEMPTS": "Demasiadas búsquedas seguidas. Espere un minuto y vuelva a intentarlo."
+    }
+  },
+  "support": {
+    "title": "Usuarios de la empresa",
+    "intro": "Entrar a la cuenta de un usuario le da exactamente sus permisos, por un tiempo limitado, y queda registrado en la auditoría de la empresa con su nombre. No es un inicio de sesión: sus credenciales siguen siendo las suyas.",
+    "backToTenants": "← Volver a empresas",
+    "noTenant": "No se indicó la empresa.",
+    "membersTitle": "Usuarios",
+    "membersEmpty": "Esta empresa todavía no tiene usuarios activos.",
+    "membersError": "No pudimos cargar los usuarios de esta empresa. Vuelva a intentarlo en un momento.",
+    "enterAs": "Entrar como",
+    "confirmEnter": "Entrar a la cuenta",
+    "entering": "Entrando…",
+    "cancel": "Cancelar",
+    "reasonLabel": "Motivo (queda en la auditoría)",
+    "consequence": "Va a entrar como {{name}}, de {{tenant}} — verá y podrá hacer exactamente lo mismo que esa persona. La empresa verá este acceso en su propia auditoría.",
+    "notPermitted": "Su rol no permite entrar a la cuenta de una empresa.",
+    "roles": {
+      "tenant_admin": "Administrador",
+      "member": "Miembro"
+    },
+    "errors": {
+      "generic": "No pudimos abrir la sesión de soporte. Vuelva a intentarlo.",
+      "VALIDATION_FAILED": "Revise el motivo: debe ser una frase que otra persona pueda evaluar después.",
+      "NOT_AUTHORIZED": "Su rol no permite entrar a la cuenta de una empresa."
+    },
+    "openUsers": "Ver los usuarios de {{tenant}}",
+    "reasonPlaceholder": "Ej.: la empresa reporta que no puede invitar usuarios desde ayer",
+    "reasonHint": "Quien revise la auditoría dentro de seis meses solo verá esta frase. Escriba qué lo trajo aquí, no lo que va a hacer."
+  }
+}

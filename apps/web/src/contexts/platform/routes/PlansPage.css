@@ -1,0 +1,181 @@
+.plans {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.plans__intro {
+  color: var(--colour-text-muted);
+  margin: 0;
+  max-width: 60ch;
+}
+
+/* Wide by nature; it scrolls inside its own container so the page never does. */
+.plans__scroll {
+  overflow-x: auto;
+}
+
+.plans__table {
+  border-collapse: collapse;
+  min-width: 100%;
+}
+
+.plans__caption {
+  caption-side: top;
+  color: var(--colour-text-muted);
+  font-size: var(--text-sm);
+  padding-bottom: var(--space-2);
+  text-align: left;
+}
+
+.plans__table th,
+.plans__table td {
+  border-bottom: 1px solid var(--colour-border);
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  vertical-align: top;
+}
+
+.plans__table thead th {
+  border-bottom: 2px solid var(--colour-border-strong);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.plans__name {
+  display: block;
+  font-weight: 600;
+}
+
+.plans__code,
+.plans__measured {
+  color: var(--colour-text-muted);
+  font-size: var(--text-xs);
+}
+
+.plans__price {
+  white-space: nowrap;
+}
+
+.plans__quota {
+  min-width: 9rem;
+}
+
+.plans__quota-figures {
+  display: block;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* The bar is decoration: the figures above it carry the same information, and the flag
+   below carries the state as a word. Colour is never the only signal. */
+.plans__bar {
+  background: var(--colour-surface-muted);
+  border-radius: var(--radius-sm);
+  display: block;
+  height: 0.35rem;
+  margin-top: var(--space-1);
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.plans__bar::after {
+  content: '';
+  inset: 0 auto 0 0;
+  position: absolute;
+  width: var(--fill, 0%);
+}
+
+.plans__bar--within::after {
+  background: var(--colour-accent);
+}
+
+.plans__bar--warning::after {
+  background: var(--colour-risk-attention);
+}
+
+.plans__bar--exceeded::after {
+  background: var(--colour-risk-critical);
+}
+
+.plans__flag {
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  font-size: var(--text-xs);
+  margin-top: var(--space-1);
+  padding: 0.1rem var(--space-2);
+  white-space: nowrap;
+}
+
+.plans__flag--warning {
+  background: var(--colour-risk-attention-surface);
+  color: var(--colour-risk-attention);
+}
+
+.plans__flag--exceeded {
+  background: var(--colour-risk-critical-surface);
+  color: var(--colour-risk-critical);
+}
+
+.plans__hint,
+.plans__field-hint {
+  color: var(--colour-text-muted);
+  font-size: var(--text-xs);
+  margin: var(--space-2) 0 0;
+}
+
+.plans__form {
+  border-top: 1px solid var(--colour-border);
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+}
+
+.plans__form-title {
+  font-size: var(--text-sm);
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.plans__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.plans__field label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.plans__field input[readonly] {
+  background: var(--colour-surface-muted);
+}
+
+.plans__error,
+.plans__warning {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: var(--space-3);
+}
+
+.plans__error {
+  background: var(--colour-risk-critical-surface);
+  border-left: 3px solid var(--colour-risk-critical);
+  color: var(--colour-risk-critical);
+}
+
+.plans__warning {
+  background: var(--colour-risk-attention-surface);
+  border-left: 3px solid var(--colour-risk-attention);
+  color: var(--colour-risk-attention);
+}
+
+.plans__form .button {
+  grid-column: 1 / -1;
+  justify-self: start;
+}

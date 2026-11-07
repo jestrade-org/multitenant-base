@@ -1,0 +1,367 @@
+.skip-link {
+  background: var(--colour-text);
+  color: var(--colour-text-inverse);
+  left: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  position: absolute;
+  top: -100%;
+  z-index: 10;
+}
+
+.skip-link:focus {
+  top: var(--space-2);
+}
+
+/*
+ * Phone first (RNF-05).
+ *
+ * The menu is a horizontal strip above the content on a narrow screen and becomes the
+ * standing column of the designs once there is room. Same markup either way: a drawer with
+ * its own open state is a second thing that can be wrong about which screen you are on.
+ */
+.shell {
+  display: grid;
+  min-height: 100vh;
+}
+
+.shell__nav {
+  background: var(--colour-neutral-100);
+  border-bottom: 1px solid var(--colour-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
+  padding: var(--space-3) var(--space-4);
+}
+
+.shell__brand {
+  display: grid;
+}
+
+.shell__mark {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.shell__scope {
+  /* The muted text step, not neutral-600: at 12px uppercase the latter sits at 3.94:1 on
+     the menu's ground, under the 4.5:1 small-text floor. */
+  color: var(--colour-text-muted);
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.shell__sections {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
+  min-width: 0;
+}
+
+.shell__section-label {
+  color: var(--colour-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  margin: 0 0 var(--space-1);
+  text-transform: uppercase;
+}
+
+.shell__nav-list {
+  display: flex;
+  gap: var(--space-1);
+  list-style: none;
+  margin: 0;
+  /* Twelve items do not fit across a phone. They scroll inside the strip; the page
+     itself never scrolls sideways. */
+  overflow-x: auto;
+  padding: 0;
+}
+
+.shell__nav-link {
+  align-items: center;
+  /* The active mark is a rule on the leading edge — a bar under the text on a horizontal
+     strip, a bar beside it in the column. `border-inline-start` switches with the layout. */
+  border-bottom: 3px solid transparent;
+  color: var(--colour-text);
+  display: flex;
+  font-size: var(--text-sm);
+  gap: var(--space-2);
+  /* 44px tap target: this is used on a phone. */
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.shell__nav-link:hover {
+  background: var(--colour-neutral-200);
+}
+
+.shell__nav-link--active {
+  background: var(--colour-accent-surface);
+  border-bottom-color: var(--colour-accent);
+  color: var(--colour-accent-strong);
+  font-weight: 600;
+}
+
+/* The count of alerts nobody has attended yet. Magenta because that is what it is: the
+   one number in the menu that means something is wrong. */
+.shell__count {
+  background: var(--colour-risk-critical);
+  border-radius: 9px;
+  color: var(--colour-text-inverse);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  line-height: 1.4;
+  padding: 0 var(--space-2);
+}
+
+.shell__session {
+  display: grid;
+  font-size: var(--text-sm);
+  gap: 2px;
+  justify-items: start;
+}
+
+.shell__user {
+  font-weight: 600;
+  margin: 0;
+}
+
+/*
+ * Their name, as the door to their own settings.
+ *
+ * `color: inherit` on purpose: this link sits on the light shell for a client and on the
+ * dark strip for platform staff, and `.shell--platform .shell__user` already decides which.
+ * Naming a colour here would pin it to one of the two and make it unreadable on the other.
+ */
+.shell__profile {
+  border-radius: var(--radius-sm);
+  color: inherit;
+  text-decoration: none;
+}
+
+.shell__profile:hover {
+  text-decoration: underline;
+}
+
+/* Underlined rather than only re-coloured: this is the only item in the menu whose active
+   state cannot lean on the nav-link rule beside it. */
+.shell__profile--active {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.shell__role,
+.shell__tenant {
+  color: var(--colour-text-muted);
+  font-size: var(--text-xs);
+  margin: 0;
+}
+
+.shell__signout {
+  background: none;
+  border: 1px solid var(--colour-border-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--text-xs);
+  margin-top: var(--space-2);
+  min-height: 36px;
+  padding: var(--space-1) var(--space-3);
+}
+
+.shell__signout:hover {
+  border-color: var(--colour-text);
+}
+
+.shell__main {
+  margin: 0 auto;
+  max-width: 72rem;
+  padding: var(--space-5) var(--space-4) var(--space-8);
+}
+
+.shell__signout-error {
+  background: var(--colour-risk-critical-surface);
+  border-bottom: 2px solid var(--colour-risk-critical);
+  color: var(--colour-risk-critical);
+  font-size: var(--text-sm);
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  text-align: center;
+}
+
+/* — the standing menu — */
+
+@media (min-width: 60rem) {
+  .shell {
+    grid-template-columns: 15rem 1fr;
+  }
+
+  .shell__nav {
+    align-content: start;
+    border-bottom: 0;
+    border-right: 1px solid var(--colour-border);
+    display: grid;
+    gap: var(--space-6);
+    padding: var(--space-5) 0 var(--space-5) var(--space-5);
+    position: sticky;
+    top: 0;
+    /* Its own scroll, so a long menu never pushes the sign-out button off the screen. */
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .shell__mark {
+    font-size: var(--text-xl);
+  }
+
+  .shell__sections {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .shell__nav-list {
+    display: grid;
+    gap: 1px;
+    overflow-x: visible;
+  }
+
+  .shell__nav-link {
+    border-bottom: 0;
+    border-left: 3px solid transparent;
+    min-height: 0;
+    padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
+  }
+
+  .shell__nav-link--active {
+    border-bottom-color: transparent;
+    border-left-color: var(--colour-accent);
+  }
+
+  /* Pinned to the bottom of the column, the way the designs place it. */
+  .shell__session {
+    align-self: end;
+    padding-right: var(--space-4);
+  }
+
+  .shell__main {
+    margin: 0;
+    padding: var(--space-6) var(--space-6) var(--space-8) var(--space-5);
+  }
+}
+
+/* — the platform panel — */
+
+/*
+ * platform staff get the darker menu of the designs. It marks whose data you are looking at:
+ * the platform panel spans every client, and a screen that looks identical to a single
+ * client's is one an analyst can misread at a glance.
+ */
+.shell--platform .shell__nav {
+  background: var(--colour-nav-surface);
+  border-color: var(--colour-nav-border);
+}
+
+.shell--platform .shell__mark,
+.shell--platform .shell__user {
+  color: var(--colour-nav-text);
+}
+
+.shell--platform .shell__scope,
+.shell--platform .shell__section-label,
+.shell--platform .shell__role,
+.shell--platform .shell__tenant {
+  color: var(--colour-nav-text-muted);
+}
+
+.shell--platform .shell__nav-link {
+  color: var(--colour-nav-link);
+}
+
+.shell--platform .shell__nav-link:hover {
+  background: var(--colour-nav-surface-hover);
+  color: var(--colour-nav-text);
+}
+
+.shell--platform .shell__nav-link--active {
+  background: transparent;
+  border-bottom-color: var(--colour-accent-on-dark);
+  color: var(--colour-nav-text);
+}
+
+@media (min-width: 60rem) {
+  .shell--platform .shell__nav-link--active {
+    border-bottom-color: transparent;
+    border-left-color: var(--colour-accent-on-dark);
+  }
+}
+
+.shell--platform .shell__signout {
+  border-color: var(--colour-nav-text-muted);
+  color: var(--colour-nav-link);
+}
+
+.shell--platform .shell__signout:hover {
+  border-color: var(--colour-nav-link);
+  color: var(--colour-nav-text);
+}
+
+/* — a support session, said out loud — */
+
+/*
+ * Magenta, full width, and above the menu. It wears the critical token rather than an
+ * informational one on purpose: this is not a notice, it is a statement that the person
+ * reading it is not who the screen otherwise says they are.
+ */
+.support-bar {
+  align-items: center;
+  background: var(--colour-risk-critical);
+  color: var(--colour-text-inverse);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-3) var(--space-4);
+}
+
+.support-bar__text {
+  flex: 1;
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  margin: 0;
+  min-width: 14rem;
+}
+
+.support-bar__return {
+  background: var(--colour-surface);
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--colour-risk-critical);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+}
+
+.support-bar__return:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.support-bar__return:focus-visible {
+  outline: 2px solid var(--colour-surface);
+  outline-offset: 2px;
+}
+
+.support-bar__error {
+  flex-basis: 100%;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin: 0;
+}

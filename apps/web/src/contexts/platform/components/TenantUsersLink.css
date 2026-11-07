@@ -1,0 +1,10 @@
+/* Underlined on hover rather than always: a column of underlined names reads as noise,
+   and the affordance is still there when the pointer is. */
+.tenant-link {
+  color: var(--colour-accent-strong);
+  text-decoration: none;
+}
+
+.tenant-link:hover {
+  text-decoration: underline;
+}

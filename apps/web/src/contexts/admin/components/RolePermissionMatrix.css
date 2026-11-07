@@ -1,0 +1,84 @@
+/* The matrix is wide by nature — 22 capabilities. It scrolls inside its own container so
+   the page never scrolls sideways, which on a phone makes every other screen unusable. */
+.matrix__scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.matrix {
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  min-width: 100%;
+}
+
+.matrix__caption {
+  caption-side: top;
+  color: var(--colour-text-muted);
+  padding-bottom: var(--space-2);
+  text-align: left;
+}
+
+.matrix th,
+.matrix td {
+  border-bottom: 1px solid var(--colour-border);
+  padding: var(--space-2);
+  text-align: center;
+}
+
+.matrix thead th {
+  border-bottom: 2px solid var(--colour-border-strong);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.matrix__capability abbr {
+  border-bottom: 1px dotted var(--colour-border-strong);
+  cursor: help;
+  text-decoration: none;
+}
+
+/* The role column stays put while the capabilities scroll: a checkbox with no visible row
+   header is a checkbox nobody can interpret. */
+.matrix__role,
+.matrix__corner {
+  background: var(--colour-surface);
+  left: 0;
+  position: sticky;
+  text-align: left;
+  z-index: 1;
+}
+
+.matrix__role {
+  display: table-cell;
+  min-width: 14rem;
+}
+
+.matrix__role-name {
+  display: block;
+  font-weight: 600;
+}
+
+.matrix__role-code {
+  color: var(--colour-text-muted);
+  font-size: var(--text-xs);
+}
+
+.matrix__badge {
+  background: var(--colour-surface-muted);
+  border-radius: var(--radius-sm);
+  color: var(--colour-text-muted);
+  font-size: var(--text-xs);
+  margin-left: var(--space-1);
+  padding: 0 var(--space-1);
+}
+
+.matrix__cell input {
+  cursor: pointer;
+  height: 1.15rem;
+  width: 1.15rem;
+}
+
+.matrix__cell input:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}

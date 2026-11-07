@@ -1,0 +1,62 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.home__welcome {
+  background: var(--colour-surface-raised);
+  border: 1px solid var(--colour-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+}
+
+.home__greeting {
+  font-size: var(--text-xl);
+  margin: 0 0 var(--space-2);
+}
+
+.home__company {
+  font-weight: 600;
+  margin: 0 0 var(--space-2);
+}
+
+.home__intro {
+  color: var(--colour-text-muted);
+  margin: 0;
+  max-width: 60ch;
+}
+
+.home__section-title {
+  font-size: var(--text-lg);
+  margin: 0 0 var(--space-3);
+}
+
+.home__shortcut-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.home__shortcut {
+  background: var(--colour-accent-surface);
+  border: 1px solid var(--colour-border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--colour-accent-strong);
+  display: inline-block;
+  font-weight: 600;
+  padding: var(--space-3) var(--space-4);
+  text-decoration: none;
+}
+
+.home__shortcut:hover {
+  border-color: var(--colour-accent);
+}
+
+.home__shortcut:focus-visible {
+  outline: 3px solid var(--colour-focus);
+  outline-offset: 2px;
+}

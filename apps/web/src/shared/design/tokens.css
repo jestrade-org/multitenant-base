@@ -1,0 +1,270 @@
+/*
+ * The design tokens (§12), retuned to the platform screens (`the platform — pantallas iniciales del
+ * MVP`, entregable 7).
+ *
+ * The palette is semantic, not decorative: teal for what is actionable, magenta for
+ * critical risk, ámbar for attention, verde for what is going well. Neutrals carry
+ * everything else. The reader is a manager checking their cash position on a phone between
+ * meetings, and the screen has to be understood in seconds (RNF-05).
+ *
+ * Colour is never the only carrier of meaning. Every risk state also has a label and a
+ * shape, because roughly one man in twelve cannot separate the red from the green.
+ *
+ * Type: the design specifies Source Sans 3. It is not bundled — fetching a webfont at
+ * runtime is an outbound request this app does not make (`security-owasp.md` A08) — so the
+ * stack resolves to the platform's own sans, which is metrically close enough that the
+ * layout does not move.
+ */
+
+/*
+ * — the two themes —
+ *
+ * Every colour token is declared once, as `light-dark(<light>, <dark>)`. The two values sit
+ * on the same line, so the themes cannot drift apart the way two duplicated blocks do: a
+ * token that gains a light value without a dark one does not compile past review.
+ *
+ * Which branch resolves is decided by the used `color-scheme`, set immediately below. The
+ * default follows the operating system; `data-theme` on <html> overrides it. Setting
+ * `color-scheme` also hands the browser the scrollbars, form controls and caret for the
+ * right theme, which no amount of custom properties can do.
+ *
+ * The brand palettes are two different families by design — a warm teal-and-ámbar light
+ * theme, a navy-and-blue dark one. The accent hue therefore changes with the theme. If the
+ * brand should instead read identically in both, the change is confined to the four
+ * `--colour-accent-*` lines below: teal clears 7.96:1 on the dark ground and works there
+ * unmodified.
+ */
+:root {
+  color-scheme: light dark;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+:root {
+  /*
+   * Surfaces. Light: white, over a page ground tinted towards `frozen-water`. Dark: the
+   * `prussian-blue` ramp, deepest at the page ground so cards read as lifted off it.
+   */
+  --colour-surface: light-dark(#ffffff, #001845);
+  --colour-surface-sunken: light-dark(#eff9f8, #001233);
+  --colour-surface-raised: light-dark(#ffffff, #001845);
+  --colour-surface-muted: light-dark(#e4f2f1, #002855);
+  --colour-border: light-dark(#b7e0dc, #33415c);
+  --colour-border-strong: light-dark(#8fcfc8, #5c677d);
+
+  /*
+   * One shared neutral ramp, ordered *away from the page ground* rather than by absolute
+   * lightness: 100 is the step nearest the ground in either theme, 900 the furthest. That
+   * is what the consumers actually mean — `neutral-100` is always "a panel just off the
+   * page" — and it is the only ordering that survives a theme flip. Ordering it by
+   * lightness instead would put white text on a white chip the moment the theme changed.
+   *
+   * 500 is deliberately the same grey in both themes: it is a chart mark, and it has to
+   * hold ≥3:1 against either ground (3.70:1 light, 4.66:1 dark).
+   */
+  --colour-neutral-100: light-dark(#f2fbfa, #002855);
+  --colour-neutral-200: light-dark(#e4f2f1, #033161);
+  --colour-neutral-300: light-dark(#cbdedc, #33415c);
+  --colour-neutral-400: light-dark(#a3bfbd, #5c677d);
+  --colour-neutral-500: light-dark(#7d8597, #7d8597);
+  --colour-neutral-600: light-dark(#5c677d, #979dac);
+  --colour-neutral-700: light-dark(#4a5468, #c3ccdb);
+  --colour-neutral-800: light-dark(#33415c, #dfe5ef);
+  --colour-neutral-900: light-dark(#001233, #ffffff);
+
+  --colour-text: light-dark(#001233, #e3e9f2);
+  --colour-text-muted: light-dark(#5c677d, #979dac);
+  --colour-text-inverse: light-dark(#ffffff, #001233);
+
+  /*
+   * The accent, and it means "you can act on this". Spending it on decoration spends the
+   * one signal the interface has for an action.
+   *
+   * `--colour-accent` is a *darkened* step of the brand hue, because the brand colours
+   * themselves cannot carry a signal on a light ground: `light-sea-green` is 2.17:1 on
+   * white and 1.82:1 on `frozen-water`, and `smart-blue` is 3.30:1 on the dark ground.
+   * Below 3:1 a 3px rule or a bar fill is not merely inelegant, it is invisible.
+   *
+   * `light-sea-green` therefore appears undiluted only where it holds up — against the
+   * platform strip, at 8.54:1 — and `frozen-water` does its work as the tinted ground the
+   * accent text sits on.
+   */
+  --colour-accent: light-dark(#0f6b64, #4d97ea);
+  --colour-accent-surface: light-dark(#cbf3f0, #023e7d);
+  --colour-accent-strong: light-dark(#0a524d, #7cb8f5);
+  /* The accent lifted for the platform strip, which is a dark ground in *both* themes. */
+  --colour-accent-on-dark: light-dark(#2ec4b6, #7cb8f5);
+
+  /*
+   * Risk. Reserved — a risk colour never stands in for a series or an accent.
+   *
+   * Neither brand palette carries a green or a red, so `normal` and `critical` are held
+   * over from the original ramp. `normal` is pulled towards a true green and away from the
+   * teal accent: at the original `#0f7a5a` it sat almost on top of `--colour-accent`, and
+   * "healthy" and "clickable" must not be the same colour.
+   *
+   * `attention` is the one state the brand palette does supply: `amber-glow` is the mark,
+   * and a darkened step of the same hue carries the text, because `amber-glow` itself is
+   * 2.05:1 on white.
+   */
+  --colour-risk-normal: light-dark(#146b39, #3ddc97);
+  --colour-risk-normal-surface: light-dark(#e7f5ec, #062e22);
+  --colour-risk-attention: light-dark(#8a5a00, #ffbf69);
+  --colour-risk-attention-surface: light-dark(#fff2dc, #3a2a08);
+  /* The rule and the dot on an attention banner: the text step is too dark to read as a
+     mark, the mark step too light to read as text. `amber-glow`, undiluted, in both. */
+  --colour-risk-attention-mark: light-dark(#ff9f1c, #ff9f1c);
+  --colour-risk-critical: light-dark(#b3005a, #ff7aa2);
+  --colour-risk-critical-surface: light-dark(#ffeef4, #3d0f24);
+
+  --colour-focus: light-dark(#0a524d, #5aa4f0);
+
+  /*
+   * The platform strip.
+   *
+   * platform staff get the darker menu, and it stays dark in both themes — it marks whose data
+   * you are looking at, so it cannot follow the page. These used to borrow the neutral
+   * ramp, which made that ramp mean two opposite things at once (`neutral-900` a ground,
+   * `neutral-300` text *on* that ground) and left it unable to survive a theme flip. They
+   * are their own tokens now.
+   *
+   * In dark mode the strip goes deeper than the page ground rather than lighter, so it
+   * still reads as a frame around the content.
+   */
+  --colour-nav-surface: light-dark(#001233, #000d24);
+  --colour-nav-surface-hover: light-dark(#002855, #002855);
+  --colour-nav-border: light-dark(#33415c, #33415c);
+  --colour-nav-text: light-dark(#ffffff, #ffffff);
+  --colour-nav-text-muted: light-dark(#979dac, #979dac);
+  --colour-nav-link: light-dark(#cbd3e1, #c3ccdb);
+
+  /* The button's pressed-past-solid state, one step beyond `--colour-text` in whichever
+     direction that theme's ink runs. */
+  --colour-button-hover: light-dark(#000000, #ffffff);
+
+  /*
+   * Chart ink.
+   *
+   * Grid and axis sit one step off the surface and stay solid hairlines: a dashed grid
+   * reads as a projection or a threshold when it is only a grid.
+   */
+  --chart-grid: light-dark(#e4f2f1, #002855);
+  --chart-axis: light-dark(#a3bfbd, #33415c);
+  --chart-baseline: light-dark(#001233, #e3e9f2);
+  --chart-label: light-dark(#5c677d, #979dac);
+  /* The surface doing the separating: the gap between touching marks, never a border. */
+  --chart-gap: 2px;
+
+  /*
+   * The aging ramp (RN-01).
+   *
+   * `por_vencer` is not overdue, so it wears the normal-risk token rather than a step of
+   * this ramp — the break between "not due yet" and "one day late" is RN-02, and the
+   * colour should show it.
+   *
+   * The five overdue buckets are *ordinal*: swapping two of them would change what the
+   * chart says, so they take a single-hue ramp rather than a set of unrelated hues.
+   * Magenta, because the ramp escalates into critical and must stay clear of both the teal
+   * accent and the ámbar of attention.
+   *
+   * The ramp runs *away from its ground* in each theme, so that in both, older means more
+   * prominent: it darkens on white and brightens on navy. Reusing the light steps on the
+   * dark ground would have inverted that — the oldest bucket, the one that matters most,
+   * would have been the one that disappeared. Both directions hold the same three checks:
+   * lightness strictly monotone, every adjacent gap ≥ 0.06, lightest step ≥ 2:1 on its
+   * ground (2.13:1 light, 2.69:1 dark).
+   *
+   * The design draws these five as yellow → amber → pink → pink → magenta. That set fails
+   * two checks: `31–60` and `61–90` land 0.019 apart in lightness — indistinguishable
+   * side by side — and the lightest step sits at 1.60:1, below the 2:1 floor. Same
+   * severity story, same brand hue, legible.
+   */
+  --chart-aging-1: light-dark(#ff90b1, #a83063);
+  --chart-aging-2: light-dark(#ff458e, #c94a80);
+  --chart-aging-3: light-dark(#d82071, #e2699a);
+  --chart-aging-4: light-dark(#aa0b56, #f491b7);
+  --chart-aging-5: light-dark(#790e3d, #ffbcd4);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+
+  --font-sans:
+    'Source Sans 3', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+  /* Figures line up in a column only if the digits are the same width. */
+  --font-numeric: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+  --font-mono: var(--font-numeric);
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.75rem;
+  --text-2xl: 2.25rem;
+
+  /* A shadow is a light source, so it deepens rather than greys out on a dark ground —
+     a 14% black lifts nothing off navy. */
+  --shadow-card: light-dark(0 1px 2px rgb(0 18 51 / 14%), 0 1px 2px rgb(0 0 0 / 55%));
+  --shadow-raised: light-dark(0 3px 10px rgb(0 18 51 / 16%), 0 3px 10px rgb(0 0 0 / 62%));
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--colour-surface-sunken);
+  color: var(--colour-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.55;
+}
+
+/* Visible focus is never removed: every action has to be reachable by keyboard. */
+:focus-visible {
+  outline: 2px solid var(--colour-focus);
+  outline-offset: 2px;
+}
+
+/* Respect a reader who asked the system for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

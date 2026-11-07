@@ -1,0 +1,155 @@
+.audit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.audit__intro {
+  color: var(--colour-text-muted);
+  margin: 0;
+  max-width: 60ch;
+}
+
+.audit__notice {
+  background: var(--colour-surface-muted);
+  border-left: 3px solid var(--colour-accent);
+  margin: 0;
+  max-width: 70ch;
+  padding: var(--space-3);
+}
+
+.audit__form {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+
+.audit__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.audit__field label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.audit__hint {
+  color: var(--colour-text-muted);
+  font-size: var(--text-xs);
+  margin: 0;
+}
+
+.audit__shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+.audit__shortcut {
+  background: var(--colour-surface-muted);
+  border: 1px solid var(--colour-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-mono, monospace);
+  font-size: var(--text-xs);
+  padding: 0.1rem var(--space-2);
+}
+
+.audit__actions {
+  display: flex;
+  gap: var(--space-2);
+  grid-column: 1 / -1;
+}
+
+/* Wide by nature; it scrolls inside its own container so the page never does. */
+.audit__scroll {
+  overflow-x: auto;
+}
+
+.audit__table {
+  border-collapse: collapse;
+  min-width: 100%;
+}
+
+.audit__caption {
+  caption-side: top;
+  color: var(--colour-text-muted);
+  font-size: var(--text-sm);
+  padding-bottom: var(--space-2);
+  text-align: left;
+}
+
+.audit__table th,
+.audit__table td {
+  border-bottom: 1px solid var(--colour-border);
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  vertical-align: top;
+}
+
+.audit__table thead th {
+  border-bottom: 2px solid var(--colour-border-strong);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.audit__when {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.audit__actor code,
+.audit__resource code,
+.audit__correlation {
+  color: var(--colour-text-muted);
+  display: block;
+  font-size: var(--text-xs);
+  overflow-wrap: anywhere;
+}
+
+.audit__actor-type {
+  display: block;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+}
+
+.audit__action {
+  font-weight: 600;
+}
+
+.audit__outcome {
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  padding: 0.1rem var(--space-2);
+  white-space: nowrap;
+}
+
+.audit__outcome--success {
+  background: var(--colour-surface-muted);
+}
+
+.audit__outcome--denied {
+  background: var(--colour-risk-attention-surface);
+  color: var(--colour-risk-attention);
+}
+
+.audit__outcome--error {
+  background: var(--colour-risk-critical-surface);
+  color: var(--colour-risk-critical);
+}
+
+.audit__paging {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.audit__paging-end {
+  color: var(--colour-text-muted);
+  font-size: var(--text-sm);
+}

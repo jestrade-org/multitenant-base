@@ -1,0 +1,133 @@
+.profile {
+  display: grid;
+  gap: var(--space-5);
+  max-width: 44rem;
+}
+
+.profile__facts {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+}
+
+@media (min-width: 34rem) {
+  .profile__facts {
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  }
+}
+
+.profile__fact {
+  display: grid;
+  gap: 2px;
+}
+
+.profile__term {
+  color: var(--colour-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.profile__value {
+  margin: 0;
+  /* An address and a timezone are read character by character when they are checked, and
+     a proportional font makes `rn` and `m` the same shape. */
+  overflow-wrap: anywhere;
+}
+
+.profile__note {
+  border-top: 1px solid var(--colour-border);
+  color: var(--colour-text-muted);
+  font-size: var(--text-sm);
+  margin: var(--space-4) 0 0;
+  padding-top: var(--space-3);
+}
+
+/* — the theme switch — */
+
+.theme-choice {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.theme-choice__legend {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: 0;
+}
+
+.theme-choice__hint {
+  color: var(--colour-text-muted);
+  font-size: var(--text-sm);
+  margin: var(--space-1) 0 var(--space-3);
+  max-width: 46ch;
+}
+
+.theme-choice__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.theme-choice__option {
+  cursor: pointer;
+  display: inline-flex;
+}
+
+/*
+ * The radio itself is taken off the screen rather than hidden: `display: none` and
+ * `visibility: hidden` both remove it from the accessibility tree and from the tab order,
+ * which would leave a control no keyboard could reach. It stays focusable, and the focus
+ * ring is drawn on the label instead.
+ */
+.theme-choice__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.theme-choice__label {
+  align-items: center;
+  background: var(--colour-surface);
+  border: 1px solid var(--colour-border-strong);
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  font-size: var(--text-sm);
+  /* 44px tap target: this is read on a phone. */
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+}
+
+.theme-choice__option:hover .theme-choice__label {
+  border-color: var(--colour-text);
+}
+
+/*
+ * The selected option carries a border, a weight and a ground — not a colour alone. A
+ * segmented control that says "this one" only by tinting is unreadable to a reader who
+ * cannot separate the hues, and this one has no other label saying which is on.
+ */
+.theme-choice__input:checked + .theme-choice__label {
+  background: var(--colour-accent-surface);
+  border-color: var(--colour-accent);
+  box-shadow: inset 0 0 0 1px var(--colour-accent);
+  color: var(--colour-accent-strong);
+  font-weight: 600;
+}
+
+.theme-choice__input:focus-visible + .theme-choice__label {
+  outline: 2px solid var(--colour-focus);
+  outline-offset: 2px;
+}
+
+.theme-choice__resolved {
+  color: var(--colour-text-muted);
+  font-size: var(--text-sm);
+  margin: var(--space-3) 0 0;
+}

@@ -1,0 +1,219 @@
+name: CI
+
+# Every red step blocks the merge. Nothing here is advisory.
+#
+# Stages still missing, each owned by its own ticket rather than stubbed out here:
+#   VC-22 / VC-88  integration tests against a Supabase stack started by the CLI
+#   VC-23 (partly) migration check against a production-shaped copy — the fresh-database
+#                  check is in the `database` job below
+#   VC-91          the negative cross-tenant test suite — the structural guard is in the
+#                  `database` job below
+#   VC-90          smoke E2E against staging
+# Deployment is deliberately absent: the reverse proxy, TLS strategy and whether
+# Supabase stays hosted are open decisions (docker.md, "Production — not decided").
+# Adding deploy jobs before that ADR exists would bake in a choice nobody made.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Day and month boundaries are timezone-sensitive. Pinning the runner removes a
+  # whole class of tests that pass on a laptop and fail in CI, or worse, the reverse.
+  TZ: UTC
+  NODE_ENV: test
+
+jobs:
+  verify:
+    name: Lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      # A build that mutates the lockfile fails here rather than drifting silently.
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Format check
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint
+
+      # The dependency rule is its own step so a violation is legible in the summary,
+      # not buried in general lint output. See eslint.architecture.config.js.
+      - name: Architecture lint (dependency rule)
+        run: pnpm lint:arch
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+  security:
+    name: Dependency audit and secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # gitleaks needs history to scan commits, not just the working tree.
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # High and critical severity blocks the merge. Patches land within 7 days,
+      # critical within 48 h (security-owasp.md, A06).
+      - name: Dependency audit
+        run: pnpm audit --audit-level high
+
+      - name: Secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  database:
+    name: Migrations against a fresh database
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      # Ephemeral local stack only. CI never touches a hosted project.
+      - name: Start Supabase
+        run: supabase start
+
+      # `supabase start` applies every migration to a database created from scratch,
+      # which is the check that matters: a migration that only works incrementally is a
+      # migration that will fail on the next environment someone creates.
+      - name: Verify migrations apply to a fresh database
+        run: supabase db reset
+
+      - name: Build
+        run: pnpm build
+
+      - name: Apply tenant migrations to every active tenant
+        run: pnpm migrate:tenants
+        env:
+          CONTROL_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:55322/postgres
+
+      # Re-running must change nothing. A deploy step that is not safe to retry is a
+      # deploy step that will be retried anyway, at the worst possible moment.
+      - name: Verify the tenant migration step is idempotent
+        run: pnpm migrate:tenants
+        env:
+          CONTROL_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:55322/postgres
+
+      # "A table without policies is a bug" is only true if something checks. This is a
+      # release gate, not a report: it fails the build the moment a tenant table exists
+      # without isolation, before the data it holds belongs to a customer.
+      - name: Verify every tenant table is isolated
+        run: pnpm verify:rls
+        env:
+          CONTROL_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:55322/postgres
+
+      - name: Stop Supabase
+        if: always()
+        run: supabase stop --no-backup
+
+  image:
+    name: API container image
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: verify
+
+    # Readiness actually checks its dependencies, so the smoke test needs a database to
+    # answer against. A plain Postgres is enough: the probe runs `select 1`, not a query
+    # against the control schema.
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      # Build context is the repository root (pnpm workspace), never apps/api.
+      # Built but not pushed: there is no deployment target yet, and the point of
+      # this job is that the image stays buildable as the workspace grows.
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          push: false
+          load: true
+          tags: multitenant-base-api:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Verify the image runs and answers its health probe
+        run: |
+          docker run -d --name api-smoke --network host \
+            -e NODE_ENV=production -e WORKERS_ENABLED=false \
+            -e CONTROL_DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/postgres \
+            multitenant-base-api:${{ github.sha }}
+          for attempt in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:3000/health/ready > /dev/null; then
+              echo "image answers /health/ready"
+              docker rm -f api-smoke
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "image never became ready"
+          docker logs api-smoke
+          docker rm -f api-smoke
+          exit 1

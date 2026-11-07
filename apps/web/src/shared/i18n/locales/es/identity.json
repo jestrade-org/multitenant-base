@@ -1,0 +1,60 @@
+{
+  "brand": "Multiempresa",
+  "signIn": {
+    "title": "Iniciar sesión",
+    "subtitle": "Acceda al espacio de trabajo de su empresa.",
+    "email": "Correo corporativo",
+    "password": "Contraseña",
+    "submit": "Entrar",
+    "submitting": "Verificando…",
+    "demoHint": "Entorno de demostración. Use admin@acme.test, member@acme.test o platform@example.test.",
+    "errors": {
+      "INVALID_CREDENTIALS": "El correo o la contraseña no son correctos.",
+      "TOO_MANY_ATTEMPTS": "Demasiados intentos. Espere un momento antes de volver a probar.",
+      "AUTH_UNAVAILABLE": "No pudimos verificar sus datos en este momento. Intente de nuevo en unos minutos.",
+      "default": "No pudimos iniciar su sesión. Intente de nuevo."
+    }
+  },
+  "session": {
+    "signOut": "Cerrar sesión",
+    "signedInAs": "{{name}} · {{role}}",
+    "role": {
+      "tenant_admin": "Administrador",
+      "member": "Miembro",
+      "platform_operator": "Operador de plataforma",
+      "platform_admin": "Administrador de plataforma"
+    },
+    "signOutFailed": "No pudimos cerrar su sesión. Sigue activa: vuelva a intentarlo antes de dejar este equipo."
+  },
+  "profile": {
+    "title": "Mi perfil",
+    "account": {
+      "title": "Su cuenta",
+      "name": "Nombre",
+      "email": "Correo",
+      "role": "Rol",
+      "readOnly": "Estos datos los administra su empresa. Para cambiar su nombre o su contraseña, escriba a quien administra su cuenta."
+    },
+    "company": {
+      "title": "Empresa",
+      "name": "Razón social",
+      "timezone": "Zona horaria",
+      "platform": "Su usuario pertenece al equipo de la plataforma y no a una empresa."
+    },
+    "appearance": {
+      "title": "Apariencia",
+      "legend": "Tema de la interfaz",
+      "hint": "Se guarda en este dispositivo. Si elige «Sistema», la pantalla sigue la configuración de su equipo.",
+      "option": {
+        "system": "Sistema",
+        "light": "Claro",
+        "dark": "Oscuro"
+      },
+      "resolved": {
+        "light": "claro",
+        "dark": "oscuro"
+      },
+      "current": "En pantalla: tema {{theme}}."
+    }
+  }
+}

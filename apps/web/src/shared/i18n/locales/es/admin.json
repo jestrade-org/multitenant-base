@@ -1,0 +1,70 @@
+{
+  "roles": {
+    "title": "Roles y permisos",
+    "intro": "Cada fila es un rol y cada columna un permiso. Los roles del sistema son iguales para todas las empresas y no se pueden editar aquí.",
+    "readOnlyIntro": "Cada fila es un rol y cada columna un permiso. Usted puede consultarlos, pero no modificarlos.",
+    "loading": "Cargando roles y permisos…",
+    "error": "No pudimos cargar los roles. Vuelva a intentarlo.",
+    "empty": "Todavía no hay roles configurados para esta empresa.",
+    "changeRejected": "No pudimos guardar ese cambio. El permiso quedó como estaba; revise si tiene autorización para otorgarlo.",
+    "matrix": {
+      "title": "Matriz de roles y permisos",
+      "caption": "Roles en las filas, permisos en las columnas. Una casilla marcada significa que ese rol tiene ese permiso.",
+      "role": "Rol",
+      "system": "del sistema",
+      "cellLabel": "{{permission}} para el rol {{role}}"
+    },
+    "contexts": {
+      "audit": "Auditoría",
+      "iam": "Usuarios y roles",
+      "integrations": "Integraciones",
+      "platform": "Plataforma",
+      "tenancy": "Empresa"
+    },
+    "retry": "Reintentar"
+  },
+  "members": {
+    "title": "Usuarios de la empresa",
+    "intro": "Invite a las personas de su empresa y asígneles un rol. El rol decide qué puede ver y hacer cada una.",
+    "caption": "Personas con acceso, su rol y su estado.",
+    "empty": "Todavía no hay usuarios registrados.",
+    "error": "No pudimos cargar los usuarios. Vuelva a intentarlo.",
+    "retry": "Reintentar",
+    "deactivate": "Desactivar",
+    "reactivate": "Reactivar",
+    "changeRoleFor": "Rol de {{name}}",
+    "columns": {
+      "person": "Persona",
+      "role": "Rol",
+      "status": "Estado",
+      "since": "Desde",
+      "actions": "Acciones"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "invite": {
+      "title": "Invitar a alguien",
+      "name": "Nombre completo",
+      "email": "Correo corporativo",
+      "emailHint": "Le enviaremos una invitación para que defina su propia contraseña.",
+      "role": "Rol",
+      "submit": "Enviar invitación",
+      "sending": "Enviando…",
+      "sent": "Invitamos a {{email}}. Definirá su contraseña desde el correo."
+    },
+    "errors": {
+      "default": "No pudimos completar la acción. Vuelva a intentarlo.",
+      "NOT_AUTHORIZED": "Su cuenta no tiene permiso para administrar usuarios.",
+      "MEMBER_NOT_FOUND": "Esa persona ya no está en la lista.",
+      "MEMBER_ALREADY_INVITED": "Ese correo ya pertenece a un usuario de su empresa.",
+      "CANNOT_DEACTIVATE_SELF": "No puede desactivar su propia cuenta. Pídale a otro administrador que lo haga.",
+      "LAST_ADMINISTRATOR": "La empresa debe conservar al menos una persona que pueda administrar usuarios. Nombre a otra antes de hacer este cambio.",
+      "INVITATION_FAILED": "No pudimos crear la cuenta. Revise el correo e inténtelo de nuevo.",
+      "INVALID_MEMBER": "Revise los datos: el correo debe ser válido y el nombre no puede quedar vacío.",
+      "ROLE_NOT_ASSIGNABLE": "Ese rol pertenece al equipo de la plataforma y no puede asignarse a un usuario de su empresa.",
+      "ROLE_NOT_FOUND": "Ese rol ya no existe. Actualice la página e inténtelo de nuevo."
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*"],
+  "references": [
+    {
+      "path": "../../packages/shared-kernel"
+    },
+    {
+      "path": "../../packages/tenancy"
+    },
+    {
+      "path": "../../packages/audit"
+    },
+    {
+      "path": "../../packages/iam"
+    },
+    {
+      "path": "../../packages/integrations"
+    }
+  ]
+}
