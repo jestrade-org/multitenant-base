@@ -12,6 +12,9 @@
 
 /* Wide by nature; it scrolls inside its own container so the page never does. */
 .plans__scroll {
+  /* A positioning context, so a visually hidden label inside the table stays inside the
+     scroller instead of widening the whole page. */
+  position: relative;
   overflow-x: auto;
 }
 

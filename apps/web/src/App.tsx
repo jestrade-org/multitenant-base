@@ -15,6 +15,7 @@ import { HomePage } from './contexts/workspace/routes/HomePage.js';
 import { useSession } from './shared/auth/SessionProvider.js';
 import { EmptyState, Skeleton } from './shared/design/primitives.js';
 import { AppShell } from './shared/layout/AppShell.js';
+import { PageHeader } from './shared/layout/PageHeader.js';
 
 /**
  * Routing.
@@ -63,7 +64,7 @@ function Page({
   const { t } = useTranslation(namespace);
   return (
     <>
-      <h1 className="page-title">{t(titleKey)}</h1>
+      <PageHeader title={t(titleKey)} />
       {children}
     </>
   );

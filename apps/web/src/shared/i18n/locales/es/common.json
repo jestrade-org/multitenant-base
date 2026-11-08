@@ -23,7 +23,9 @@
       "administration": "Administración",
       "platform": "Plataforma"
     },
-    "home": "Inicio"
+    "home": "Inicio",
+    "breadcrumbLabel": "Ruta de navegación",
+    "breadcrumbRoot": "Inicio"
   },
   "state": {
     "loadingLabel": "Cargando información",

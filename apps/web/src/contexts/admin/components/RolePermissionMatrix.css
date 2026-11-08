@@ -1,6 +1,9 @@
 /* The matrix is wide by nature — 22 capabilities. It scrolls inside its own container so
    the page never scrolls sideways, which on a phone makes every other screen unusable. */
 .matrix__scroll {
+  /* A positioning context, so a visually hidden label inside the table stays inside the
+     scroller instead of widening the whole page. */
+  position: relative;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }

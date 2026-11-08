@@ -1,5 +1,6 @@
 .login {
   align-items: center;
+  background: var(--colour-surface-sunken);
   display: flex;
   justify-content: center;
   min-height: 100vh;
@@ -10,7 +11,8 @@
   background: var(--colour-surface);
   border: 1px solid var(--colour-border);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
+  /* Lifted further than a card in the app: it is the only thing on the screen. */
+  box-shadow: var(--shadow-raised);
   max-width: 26rem;
   padding: var(--space-6);
   width: 100%;
@@ -20,17 +22,38 @@
   margin-bottom: var(--space-5);
 }
 
-.login__mark {
-  display: block;
+.login__brand {
+  align-items: center;
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+/* The same logo tile as the sidebar: a mark, in the brighter brand blue. */
+.login__logo {
+  align-items: center;
+  background: var(--colour-brand);
+  border-radius: var(--radius-sm);
+  color: var(--colour-on-mark);
+  display: inline-flex;
   font-size: var(--text-lg);
   font-weight: 700;
-  letter-spacing: 0.04em;
+  height: 2.5rem;
+  justify-content: center;
+  width: 2.5rem;
+}
+
+.login__mark {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .login__title {
   font-size: var(--text-xl);
+  font-weight: 600;
   letter-spacing: -0.01em;
-  margin: var(--space-4) 0 var(--space-1);
+  margin: 0 0 var(--space-1);
 }
 
 .login__subtitle {
@@ -50,16 +73,6 @@
   font-weight: 500;
 }
 
-.login__field input {
-  background: var(--colour-surface);
-  border: 1px solid var(--colour-border-strong);
-  border-radius: var(--radius-sm);
-  font: inherit;
-  min-height: 44px;
-  padding: var(--space-2) var(--space-3);
-  width: 100%;
-}
-
 .login__error {
   background: var(--colour-risk-critical-surface);
   border-left: 3px solid var(--colour-risk-critical);
@@ -71,6 +84,7 @@
 }
 
 .login__submit {
+  min-height: 44px;
   width: 100%;
 }
 

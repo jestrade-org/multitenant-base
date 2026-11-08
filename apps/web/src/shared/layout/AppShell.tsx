@@ -2,83 +2,32 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, Outlet } from 'react-router-dom';
 
+import { NAV_GROUPS } from './navigation.js';
 import { useSession } from '../auth/SessionProvider.js';
 import { endSupportAccess } from '../auth/supportAccess.js';
+import { Icon } from '../design/icons.js';
 
 import './AppShell.css';
 
 /**
- * The frame every screen sits in, drawn to the navigation of the MVP designs: a standing
- * menu down the left, the brand and the scope at the top of it, and the person who is
- * signed in at the bottom.
+ * The frame every screen sits in, in the familiar admin-dashboard layout: a dark sidebar
+ * with the brand and the menu, a light top bar that says whose workspace this is and who
+ * is signed in, and the screen on a light grey ground.
  *
  * One bundle for every role: what a person sees comes from the permission model (§8.3),
  * never from a per-tenant code flag. Hiding a control is UX — the server still checks.
  *
- * The navigation is a real `<nav>` with links, not buttons that push history. A person
- * needs to be able to send someone the URL of the view they are looking at,
- * and a link is also what makes middle-click, bookmarking and the back button work
- * without any code from us.
+ * The navigation is a real `<nav>` with links, not buttons that push history, so a URL
+ * can be shared and middle-click, bookmarks and the back button work with no code of ours.
  */
 
-interface NavItem {
-  readonly to: string;
-  readonly labelKey: string;
-  /** Permission the item is gated on. */
-  readonly requires: string;
+/** Up to two initials, for the avatar. Presentation only; the full name sits beside it. */
+function initialsOf(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/);
+  const first = parts[0]?.[0] ?? '';
+  const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? '') : '';
+  return `${first}${last}`.toUpperCase();
 }
-
-interface NavGroup {
-  readonly id: string;
-  /**
-   * Shown above the group, unless it is the only group on screen — a person who can see
-   * nothing but the platform section does not need it labelled twice, once under the
-   * brand and once over the only list there is.
-   */
-  readonly labelKey: string;
-  readonly items: readonly NavItem[];
-}
-
-/**
- * The menu, in three sections.
- *
- * These are three separate audiences — the company's screens, the company's own
- * administration, the platform panel — and no one person normally holds all three. They are one list here, grouped and gated, so a session that does hold two of
- * them gets one coherent menu rather than a screen that changes shape as they navigate.
- */
-const NAV_GROUPS: readonly NavGroup[] = [
-  {
-    id: 'company',
-    labelKey: 'nav.group.company',
-    // A project built on this base adds its own modules' screens to this group, each
-    // gated on the capability its endpoints check.
-    items: [{ to: '/inicio', labelKey: 'nav.home', requires: 'tenancy:read' }],
-  },
-  {
-    // The tenant's own administration. Hidden from anyone without the capability — which
-    // is UX, not security: the server checks again on every request.
-    id: 'administration',
-    labelKey: 'nav.group.administration',
-    items: [
-      { to: '/administracion/usuarios', labelKey: 'nav.members', requires: 'iam:user_manage' },
-      { to: '/administracion/roles', labelKey: 'nav.roles', requires: 'iam:user_manage' },
-    ],
-  },
-  {
-    // Platform staff. Their capabilities exist in no tenant role, so this section never
-    // appears for a company's user however senior. The operator holds `queue_monitor`
-    // without `tenant_manage`, so they see the queues and not the companies — the permission
-    // model doing its job, not a special case.
-    id: 'platform',
-    labelKey: 'nav.group.platform',
-    items: [
-      { to: '/plataforma/empresas', labelKey: 'nav.tenants', requires: 'platform:tenant_manage' },
-      { to: '/plataforma/planes', labelKey: 'nav.plans', requires: 'platform:plan_manage' },
-      { to: '/plataforma/colas', labelKey: 'nav.queues', requires: 'platform:queue_monitor' },
-      { to: '/plataforma/auditoria', labelKey: 'nav.audit', requires: 'audit:read_all' },
-    ],
-  },
-];
 
 export function AppShell() {
   const { t } = useTranslation('common');
@@ -96,12 +45,13 @@ export function AppShell() {
     items: group.items.filter((item) => can(item.requires)),
   })).filter((group) => group.items.length > 0);
 
-  // Platform staff belong to no company (§8.1), and their panel is the darker one. It follows the session rather than the route, so the frame does not change
-  // colour under someone as they navigate.
+  // Platform staff belong to no company (§8.1). Their frame carries a second mark colour,
+  // following the session rather than the route, so it does not change under them as they
+  // navigate and a cross-company screen is never mistaken for a single company's.
   const isPlatformStaff = session?.tenant === null;
 
   /**
-   * Hand the client's account back.
+   * Hand the company's account back.
    *
    * A full navigation afterwards, not a cache invalidation: every permission in the
    * running app has just changed, and re-deriving that from a patched cache is how a
@@ -114,7 +64,7 @@ export function AppShell() {
       await endSupportAccess();
       window.location.assign('/');
     } catch {
-      // Still inside the client's account. Saying so is the only honest option: someone
+      // Still inside the company's account. Saying so is the only honest option: someone
       // who believes they left and has not is about to act as somebody else by accident.
       setReturning(false);
       setReturnFailed(true);
@@ -172,10 +122,10 @@ export function AppShell() {
       <div className={`shell${isPlatformStaff ? ' shell--platform' : ''}`}>
         <nav aria-label={t('nav.label')} className="shell__nav">
           <div className="shell__brand">
-            <span className="shell__mark">{t('app.name')}</span>
-            <span className="shell__scope">
-              {isPlatformStaff ? t('nav.scope.platform') : t('nav.scope.company')}
+            <span aria-hidden="true" className="shell__logo">
+              {t('app.name').slice(0, 1)}
             </span>
+            <span className="shell__mark">{t('app.name')}</span>
           </div>
 
           <div className="shell__sections">
@@ -198,6 +148,7 @@ export function AppShell() {
                         }
                         to={item.to}
                       >
+                        <Icon name={item.icon} />
                         <span className="shell__nav-text">{t(item.labelKey)}</span>
                       </NavLink>
                     </li>
@@ -206,40 +157,52 @@ export function AppShell() {
               </div>
             ))}
           </div>
+        </nav>
 
-          {session === undefined ? null : (
-            <div className="shell__session">
-              {/* Their own name is the way in to their own settings — the convention
-                  everywhere else, and it costs the menu no new row. It is deliberately not
-                  a gated nav item: every session has a profile. */}
-              <p className="shell__user">
+        <div className="shell__content">
+          <header className="shell__topbar">
+            {/* Whose workspace this is, from the verified session — never a constant. Staff
+                belong to no company, and saying so beats an empty slot. */}
+            <p className="shell__scope">
+              <Icon name={isPlatformStaff ? 'shield' : 'building'} size={16} />
+              <span className="visually-hidden">
+                {isPlatformStaff ? t('nav.scope.platform') : t('nav.scope.company')}:{' '}
+              </span>
+              <span className="shell__scope-name">
+                {session?.tenant?.name ?? t('nav.platformScope')}
+              </span>
+            </p>
+
+            {session === undefined ? null : (
+              <div className="shell__session">
+                {/* Their own name is the way in to their own settings — the convention
+                    everywhere else. Not a gated nav item: every session has a profile. */}
                 <NavLink
                   className={({ isActive }) =>
                     `shell__profile${isActive ? ' shell__profile--active' : ''}`
                   }
                   to="/perfil"
                 >
-                  {session.user.fullName}
+                  <span aria-hidden="true" className="shell__avatar">
+                    {initialsOf(session.user.fullName)}
+                  </span>
+                  <span className="shell__identity">
+                    <span className="shell__user">{session.user.fullName}</span>
+                    <span className="shell__role">
+                      {ti(`session.role.${session.user.roleCode}`, {
+                        defaultValue: session.user.roleCode,
+                      })}
+                    </span>
+                  </span>
                 </NavLink>
-              </p>
-              <p className="shell__role">
-                {ti(`session.role.${session.user.roleCode}`, {
-                  defaultValue: session.user.roleCode,
-                })}
-              </p>
-              {/* The company name comes from the verified session, not from a constant:
-                  what a person sees has to be the tenant the server bound them to. Staff
-                  belong to no company, and saying so beats an empty line that reads as a
-                  name which failed to load. */}
-              <p className="shell__tenant">{session.tenant?.name ?? t('nav.platformScope')}</p>
-              <button className="shell__signout" onClick={() => void onSignOut()} type="button">
-                {ti('session.signOut')}
-              </button>
-            </div>
-          )}
-        </nav>
+                <button className="shell__signout" onClick={() => void onSignOut()} type="button">
+                  <Icon name="logout" size={16} />
+                  <span>{ti('session.signOut')}</span>
+                </button>
+              </div>
+            )}
+          </header>
 
-        <div className="shell__content">
           {signOutFailed ? (
             <p className="shell__signout-error" role="alert">
               {ti('session.signOutFailed')}

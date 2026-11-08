@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { useSession } from '../../../shared/auth/SessionProvider.js';
+import { Icon, type IconName } from '../../../shared/design/icons.js';
 
 import './HomePage.css';
 
@@ -16,16 +17,42 @@ import './HomePage.css';
  * Everything shown comes from the verified session — the company name is the tenant the
  * server bound them to, never a constant.
  */
+interface Shortcut {
+  readonly to: string;
+  /** Translation key under `home:shortcuts`; its hint is `<key>Hint`. */
+  readonly key: string;
+  readonly icon: IconName;
+  readonly tone: 'blue' | 'green' | 'amber';
+  /** The capability the target screen needs; `undefined` for screens every session has. */
+  readonly requires: string | undefined;
+}
+
+const SHORTCUTS: readonly Shortcut[] = [
+  {
+    to: '/administracion/usuarios',
+    key: 'members',
+    icon: 'users',
+    tone: 'blue',
+    requires: 'iam:user_manage',
+  },
+  {
+    to: '/administracion/roles',
+    key: 'roles',
+    icon: 'shield',
+    tone: 'green',
+    requires: 'iam:user_manage',
+  },
+  { to: '/perfil', key: 'profile', icon: 'user', tone: 'amber', requires: undefined },
+];
+
 export function HomePage() {
   const { t } = useTranslation('home');
   const { state, can } = useSession();
   const session = state.status === 'authenticated' ? state.session : undefined;
 
-  const shortcuts = [
-    { to: '/administracion/usuarios', labelKey: 'shortcuts.members', requires: 'iam:user_manage' },
-    { to: '/administracion/roles', labelKey: 'shortcuts.roles', requires: 'iam:user_manage' },
-    { to: '/perfil', labelKey: 'shortcuts.profile', requires: undefined },
-  ].filter((shortcut) => shortcut.requires === undefined || can(shortcut.requires));
+  const shortcuts = SHORTCUTS.filter(
+    (shortcut) => shortcut.requires === undefined || can(shortcut.requires),
+  );
 
   return (
     <div className="home">
@@ -49,7 +76,13 @@ export function HomePage() {
           {shortcuts.map((shortcut) => (
             <li key={shortcut.to}>
               <Link className="home__shortcut" to={shortcut.to}>
-                {t(shortcut.labelKey)}
+                <span className={`home__shortcut-icon home__shortcut-icon--${shortcut.tone}`}>
+                  <Icon name={shortcut.icon} size={20} />
+                </span>
+                <span className="home__shortcut-text">
+                  <span className="home__shortcut-label">{t(`shortcuts.${shortcut.key}`)}</span>
+                  <span className="home__shortcut-hint">{t(`shortcuts.${shortcut.key}Hint`)}</span>
+                </span>
               </Link>
             </li>
           ))}

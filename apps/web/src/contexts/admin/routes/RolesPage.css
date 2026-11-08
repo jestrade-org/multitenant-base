@@ -4,11 +4,6 @@
   gap: var(--space-4);
 }
 
-.roles__header h1 {
-  font-size: var(--text-xl);
-  margin: 0 0 var(--space-1);
-}
-
 .roles__intro {
   color: var(--colour-text-muted);
   margin: 0;

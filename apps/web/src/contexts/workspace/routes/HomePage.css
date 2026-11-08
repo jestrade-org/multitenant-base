@@ -4,15 +4,20 @@
   gap: var(--space-6);
 }
 
+/* The solid-colour tile of the reference layout. The accent step, not the brand blue, so
+   every line on it — the small intro included — clears 4.5:1 in either theme. */
 .home__welcome {
-  background: var(--colour-surface-raised);
-  border: 1px solid var(--colour-border);
+  background: var(--colour-accent);
   border-radius: var(--radius-md);
-  padding: var(--space-5);
+  box-shadow: var(--shadow-card);
+  color: var(--colour-on-accent);
+  padding: var(--space-5) var(--space-6);
 }
 
 .home__greeting {
+  color: inherit;
   font-size: var(--text-xl);
+  font-weight: 600;
   margin: 0 0 var(--space-2);
 }
 
@@ -22,7 +27,6 @@
 }
 
 .home__intro {
-  color: var(--colour-text-muted);
   margin: 0;
   max-width: 60ch;
 }
@@ -33,30 +37,78 @@
 }
 
 .home__shortcut-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
+/* A tile: a tinted icon disc beside a label and a one-line hint, the way the reference sets
+   its summary figures — without inventing any figures to put in it. */
 .home__shortcut {
-  background: var(--colour-accent-surface);
-  border: 1px solid var(--colour-border-strong);
-  border-radius: var(--radius-sm);
-  color: var(--colour-accent-strong);
-  display: inline-block;
-  font-weight: 600;
-  padding: var(--space-3) var(--space-4);
+  align-items: center;
+  background: var(--colour-surface-raised);
+  border: 1px solid var(--colour-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  color: var(--colour-text);
+  display: flex;
+  gap: var(--space-4);
+  height: 100%;
+  padding: var(--space-4) var(--space-5);
   text-decoration: none;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease;
 }
 
 .home__shortcut:hover {
-  border-color: var(--colour-accent);
+  border-color: var(--colour-brand);
+  box-shadow: var(--shadow-raised);
+  color: var(--colour-text);
 }
 
-.home__shortcut:focus-visible {
-  outline: 3px solid var(--colour-focus);
-  outline-offset: 2px;
+.home__shortcut:hover .home__shortcut-label {
+  color: var(--colour-accent);
+}
+
+.home__shortcut-icon {
+  align-items: center;
+  border-radius: 50%;
+  display: inline-flex;
+  flex-shrink: 0;
+  height: 2.75rem;
+  justify-content: center;
+  width: 2.75rem;
+}
+
+.home__shortcut-icon--blue {
+  background: var(--colour-accent-surface);
+  color: var(--colour-accent);
+}
+
+.home__shortcut-icon--green {
+  background: var(--colour-risk-normal-surface);
+  color: var(--colour-risk-normal);
+}
+
+.home__shortcut-icon--amber {
+  background: var(--colour-risk-attention-surface);
+  color: var(--colour-risk-attention);
+}
+
+.home__shortcut-text {
+  display: grid;
+  gap: 2px;
+}
+
+.home__shortcut-label {
+  font-weight: 600;
+}
+
+.home__shortcut-hint {
+  color: var(--colour-text-muted);
+  font-size: var(--text-xs);
 }

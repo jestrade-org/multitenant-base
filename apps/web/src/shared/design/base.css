@@ -1,0 +1,115 @@
+/*
+ * Element defaults, so every screen's controls and tables look the same without each one
+ * restating them. Kept at element specificity on purpose: a screen's own class rules still
+ * win wherever a screen genuinely needs something different.
+ */
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--colour-text);
+  line-height: 1.3;
+}
+
+a {
+  color: var(--colour-accent);
+}
+
+a:hover {
+  color: var(--colour-button-hover);
+}
+
+/* — form controls — */
+
+:where(
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='search'],
+  input[type='number'],
+  input[type='date'],
+  input[type='datetime-local'],
+  input:not([type]),
+  select,
+  textarea
+) {
+  background: var(--colour-surface);
+  border: 1px solid var(--colour-border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--colour-text);
+  font: inherit;
+  /* 40px: comfortable with a mouse, still a fair touch target. */
+  min-height: 40px;
+  padding: var(--space-2) var(--space-3);
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease;
+  width: 100%;
+}
+
+:where(input, select, textarea)::placeholder {
+  color: var(--colour-neutral-500);
+}
+
+:where(input, select, textarea):hover {
+  border-color: var(--colour-neutral-400);
+}
+
+/* The halo is the brand blue: a mark, not text. The outline from tokens.css stays for
+   keyboard users, so focus is never conveyed by the halo alone. */
+:where(input, select, textarea):focus {
+  border-color: var(--colour-brand);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--colour-brand) 20%, transparent);
+}
+
+:where(input, select, textarea):disabled,
+:where(input, select, textarea)[readonly] {
+  background: var(--colour-surface-muted);
+  color: var(--colour-text-muted);
+}
+
+:where(input[type='checkbox'], input[type='radio']) {
+  accent-color: var(--colour-accent);
+  height: 1rem;
+  width: 1rem;
+}
+
+label {
+  color: var(--colour-text);
+}
+
+/* — tables — */
+
+:where(table) {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+:where(th, td) {
+  border-bottom: 1px solid var(--colour-border);
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  vertical-align: middle;
+}
+
+:where(thead th) {
+  background: var(--colour-surface-muted);
+  color: var(--colour-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+:where(tbody tr):hover {
+  background: color-mix(in srgb, var(--colour-surface-muted) 60%, transparent);
+}
+
+:where(caption) {
+  caption-side: top;
+  color: var(--colour-text-muted);
+  font-size: var(--text-sm);
+  padding-bottom: var(--space-3);
+  text-align: left;
+}

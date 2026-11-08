@@ -52,7 +52,12 @@ export function LoginPage() {
     <main className="login" id="main">
       <div className="login__card">
         <header className="login__header">
-          <span className="login__mark">{t('brand')}</span>
+          <span className="login__brand">
+            <span aria-hidden="true" className="login__logo">
+              {t('brand').slice(0, 1)}
+            </span>
+            <span className="login__mark">{t('brand')}</span>
+          </span>
           <h1 className="login__title">{t('signIn.title')}</h1>
           <p className="login__subtitle">{t('signIn.subtitle')}</p>
         </header>

@@ -7,6 +7,7 @@ import { SessionProvider } from './shared/auth/SessionProvider.js';
 import { applyStoredPreference, ThemeProvider } from './shared/theme/ThemeProvider.js';
 import './shared/i18n/index.js';
 import './shared/design/tokens.css';
+import './shared/design/base.css';
 import './index.css';
 
 /**

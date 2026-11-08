@@ -42,6 +42,11 @@ function stubSession(session: unknown): void {
   );
 }
 
+/** The visible label of a shortcut tile, without the hint line beneath it. */
+function shortcutLabel(link: HTMLElement): string {
+  return link.querySelector('.home__shortcut-label')?.textContent ?? '';
+}
+
 function renderPage() {
   return render(
     <MemoryRouter>
@@ -79,7 +84,7 @@ describe('the home screen', () => {
     renderPage();
     await screen.findByText('Hola, Jordan Lee.');
 
-    expect(screen.getAllByRole('link').map((link) => link.textContent)).toEqual(['Mi perfil']);
+    expect(screen.getAllByRole('link').map(shortcutLabel)).toEqual(['Mi perfil']);
   });
 
   it('offers an administrator the user and role screens', async () => {
@@ -87,7 +92,7 @@ describe('the home screen', () => {
     renderPage();
     await screen.findByText('Hola, Alex Morgan.');
 
-    expect(screen.getAllByRole('link').map((link) => link.textContent)).toEqual([
+    expect(screen.getAllByRole('link').map(shortcutLabel)).toEqual([
       'Administrar usuarios',
       'Roles y permisos',
       'Mi perfil',

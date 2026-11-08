@@ -95,10 +95,7 @@ export function RolesPage() {
 
   return (
     <div className="roles">
-      <header className="roles__header">
-        <h1>{t('roles.title')}</h1>
-        <p className="roles__intro">{readOnly ? t('roles.readOnlyIntro') : t('roles.intro')}</p>
-      </header>
+      <p className="roles__intro">{readOnly ? t('roles.readOnlyIntro') : t('roles.intro')}</p>
 
       {failedRoleId === undefined ? null : (
         <p className="roles__error" role="alert">

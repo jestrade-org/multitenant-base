@@ -7,6 +7,9 @@
     "title": "Accesos rápidos",
     "members": "Administrar usuarios",
     "roles": "Roles y permisos",
-    "profile": "Mi perfil"
+    "profile": "Mi perfil",
+    "membersHint": "Invite personas y asigne roles.",
+    "rolesHint": "Qué puede ver y hacer cada rol.",
+    "profileHint": "Su cuenta y la apariencia de la interfaz."
   }
 }
